@@ -4,8 +4,9 @@ import path from "path";
 import { ApolloServer } from "apollo-server-express";
 import dotenv from "dotenv";
 import app from "./app";
-// import resolvers from './resolvers';
-// import routes from './routes';
+import connectDb from "./database";
+import routes from "./routes";
+import resolvers from "./resolvers";
 // import { context } from './utils/contextApollo';
 
 dotenv.config();
@@ -25,25 +26,21 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
     csrfPrevention: true,
     cache: "bounded",
   });
-  //   clients.knex.getInstance();
-  //   routes(app);
+  routes(app);
   await server.start();
   server.applyMiddleware({ app });
   await httpServer.listen(PORT);
-  //   const trx = await knex.getInstance();
   try {
-    // await trx.raw("SELECT 1");
-    console.log("PostgreSQL connected");
+    await connectDb();
     console.log(
       `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
     );
   } catch (e) {
     console.log(e);
-    console.log("PostgreSQL not connected");
     console.log("Server crashed");
   }
 }
 
 (async () => {
-//   await startApolloServer(typeDefs, resolvers);
+  await startApolloServer(typeDefs, resolvers);
 })();
