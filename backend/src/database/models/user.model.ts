@@ -3,6 +3,13 @@ import { IUser } from "../../types/interfaces";
 import UserSchema from "../schemas/user.schema";
 const { model } = pkg;
 
-const UserModel = model<IUser>("User", UserSchema);
+const User = model<IUser>("User", UserSchema);
 
-export default UserModel;
+export const isEmailExisted = async (email: string) => {
+  const user = await User.findOne({
+    email,
+  });
+
+  return !!user;
+};
+export default User;

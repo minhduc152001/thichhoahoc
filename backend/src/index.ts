@@ -7,7 +7,7 @@ import app from "./app";
 import connectDb from "./database";
 import routes from "./routes";
 import resolvers from "./resolvers";
-// import { context } from './utils/contextApollo';
+import { context } from "./utils/contextApollo";
 
 dotenv.config();
 
@@ -22,7 +22,7 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    // context,
+    context,
     csrfPrevention: true,
     cache: "bounded",
   });

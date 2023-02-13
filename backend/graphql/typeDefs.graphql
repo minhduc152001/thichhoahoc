@@ -1,10 +1,17 @@
-type Query {
-  book(id: String!): Book
-  bookList: [Book]
+# Input
+
+# Type
+type User {
+  _id: String
+  email: String
+  lastName: String
+  firstName: String
+  isEmailVerified: Boolean
+  subscription: String
+  subscriptionExpiresAt: String
 }
 
-type Book {
-  id: String
-  name: String
-  genre: String
+# Query
+type Query {
+  getUserById: User
 }
