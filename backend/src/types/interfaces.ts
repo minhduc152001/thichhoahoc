@@ -1,4 +1,8 @@
-import { ESubscription } from "../constants/enumTypes";
+import {
+  ECorrectAnswer,
+  EGradeLevel,
+  ESubscription,
+} from "../constants/enumTypes";
 
 export interface IContext {
   token: string;
@@ -42,4 +46,109 @@ export interface IUserSignupArgs {
 export interface IUserLoginArgs {
   email: string;
   password: string;
+}
+
+export interface ICourse {
+  _id?: string;
+  name: string;
+  gradeLevel: EGradeLevel;
+  description: string;
+  buyersCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ILesson {
+  _id?: string;
+  courseId: string;
+  name: string;
+  description: string;
+  text: string;
+  videoUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IParticipationCourse {
+  _id?: string;
+  userId: string;
+  courseId: string;
+  isCompleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IRiddle {
+  _id?: string;
+  name: string;
+  imageUrl: string;
+  hint?: string;
+  correctAnswer: [string];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IRiddleAttempt {
+  _id?: string;
+  userId: string;
+  riddleId: string;
+  answer: string;
+  isCorrect: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IDocument {
+  _id?: string;
+  name: string;
+  type: string;
+  url: string;
+  downloadedCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IMockTest {
+  _id?: string;
+  gradeLevel: EGradeLevel;
+  name: string;
+  totalTime: number;
+  takenCount: number;
+  createdAt: Date;
+}
+
+export interface ITestQuestion {
+  _id?: string;
+  mockTestId: string;
+  question: string;
+  score: string;
+  hint?: string;
+  optionA: string;
+  optionB: string;
+  optionC: string;
+  optionD: string;
+  correctAnswer: ECorrectAnswer;
+  explaination: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ITestRecord {
+  _id?: string;
+  testQuestionId: string;
+  userId: string;
+  answer: ECorrectAnswer;
+  isCorrect: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ITestHistory {
+  _id?: string;
+  mockTestId: string;
+  userId: string;
+  attemptsCount: number;
+  highestScore: number;
+  doneTime: number;
+  userTakenTimesCount: number;
 }

@@ -9,8 +9,8 @@ const UserSchema = new Schema<IUser>({
   isEmailVerified: { type: Boolean, require: false, default: null },
   confirmationCode: { type: String, required: false, default: null },
   subscription: {
-    // enum: ["NORMAL", "MONTHLY", "ANNUALLY", "PERMANENT"],
     type: String,
+    enum: ["NORMAL", "MONTHLY", "ANNUALLY", "PERMANENT"],
     default: "NORMAL" as any,
   },
   subscriptionExpiresAt: { type: Date, required: false, default: null },

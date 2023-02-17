@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { IPayLoad, IUserLoginArgs, IUserSignupArgs } from "../types/interfaces";
-import User, { isEmailExisted } from "../database/models/user.model";
+import User from "../database/models/user.model";
 import { ApolloError } from "apollo-server-express";
 
+// Utilities
 const generateAccessToken = ({ userId, email }: IPayLoad) => {
   const accessToken = jwt.sign(
     {
@@ -27,6 +28,15 @@ const comparePassword = async (
 ) => {
   const result = await bcrypt.compare(passwordUserInput, hashedPassword);
   return result;
+};
+
+// Check with db model
+const isEmailExisted = async (email: string) => {
+  const user = await User.findOne({
+    email,
+  });
+
+  return !!user;
 };
 
 export default class UserService {
