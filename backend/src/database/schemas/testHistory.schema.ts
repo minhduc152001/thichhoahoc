@@ -8,7 +8,7 @@ const ITestHistorySchema = new Schema<ITestHistory>(
     attemptsCount: { type: Number, required: true, default: 1 },
     highestScore: { type: Number, required: true, default: 0 },
     doneTime: { type: Number, required: true, default: 0 },
-    userTakenTimesCount: { type: Number, default: 0 },
+    createdAt: { type: Date, default: Date.now() },
   },
   { timestamps: false }
 );

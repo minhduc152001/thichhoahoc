@@ -1,4 +1,117 @@
+# Scalar
+scalar Date
+
+# Enum
+enum ESubscription {
+  NORMAL
+  MONTHLY
+  ANNUALLY
+  PERMANENT
+}
+
+enum EGradeLevel {
+  G11
+  G10
+  G12
+  collegePrep
+}
+
+enum ECorrectAnswer {
+  A
+  B
+  C
+  D
+}
+
 # Input
+input CourseInput {
+  _id: String
+  name: String
+  gradeLevel: EGradeLevel
+  description: String
+  buyersCount: Int
+}
+
+input LessonInput {
+  _id: String
+  courseId: String
+  name: String
+  description: String
+  text: String
+  videoUrl: String
+}
+
+input ParticipationCourseInput {
+  _id: String
+  userId: String
+  courseId: String
+  isCompleted: Boolean
+}
+
+input RiddleInput {
+  _id: String
+  name: String
+  imageUrl: String
+  hint: String
+  correctAnswer: [String]
+}
+
+input RiddleAttemptInput {
+  _id: String
+  userId: String
+  riddleId: String
+  answer: String
+  isCorrect: Boolean
+}
+
+input DocumentInput {
+  _id: String
+  name: String
+  gradeLevel: EGradeLevel
+  type: String
+  url: String
+  downloadedCount: Int
+}
+
+input MockTestInput {
+  _id: String
+  gradeLevel: EGradeLevel
+  name: String
+  totalTime: Int
+  userTakenTimes: Int
+  takenCount: Int
+}
+
+input TestQuestionInput {
+  _id: String
+  mockTestId: String
+  question: String
+  score: Float
+  hint: String
+  optionA: String
+  optionB: String
+  optionC: String
+  optionD: String
+  correctAnswer: ECorrectAnswer
+  explaination: String
+}
+
+input TestRecordInput {
+  _id: String
+  testQuestionId: String
+  userId: String
+  answer: ECorrectAnswer
+  isCorrect: Boolean
+}
+
+input TestHistoryInput {
+  _id: String
+  mockTestId: String
+  userId: String
+  attemptsCount: Int
+  highestScore: Float
+  doneTime: Float
+}
 
 # Type
 type User {
@@ -11,7 +124,174 @@ type User {
   subscriptionExpiresAt: String
 }
 
+type Course {
+  _id: String
+  name: String
+  gradeLevel: EGradeLevel
+  description: String
+  buyersCount: Int
+}
+
+type Lesson {
+  _id: String
+  courseId: String
+  name: String
+  description: String
+  text: String
+  videoUrl: String
+  createdAt: Date
+  updatedAt: Date
+}
+
+type ParticipationCourse {
+  _id: String
+  userId: String
+  courseId: String
+  isCompleted: Boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+type Riddle {
+  _id: String
+  name: String
+  imageUrl: String
+  hint: String
+  correctAnswer: [String]
+  createdAt: Date
+  updatedAt: Date
+}
+
+type RiddleAttempt {
+  _id: String
+  userId: String
+  riddleId: String
+  answer: String
+  isCorrect: Boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+type Document {
+  _id: String
+  name: String
+  gradeLevel: EGradeLevel
+  type: String
+  url: String
+  downloadedCount: Int
+  createdAt: Date
+  updatedAt: Date
+}
+
+type MockTest {
+  _id: String
+  gradeLevel: EGradeLevel
+  name: String
+  totalTime: Int
+  takenCount: Int
+  userTakenTimes: Int
+  createdAt: Date
+}
+
+type TestQuestion {
+  _id: String
+  mockTestId: String
+  question: String
+  score: Float
+  hint: String
+  optionA: String
+  optionB: String
+  optionC: String
+  optionD: String
+  correctAnswer: ECorrectAnswer
+  explaination: String
+  createdAt: Date
+  updatedAt: Date
+}
+
+type TestRecord {
+  _id: String
+  testQuestionId: String
+  userId: String
+  answer: ECorrectAnswer
+  isCorrect: Boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+type TestHistory {
+  _id: String
+  mockTestId: String
+  userId: String
+  attemptsCount: Int
+  highestScore: Float
+  doneTime: Float
+  createdAt: Date
+}
+
 # Query
 type Query {
   getUserById: User
+  listCourses: [Course]
+}
+
+# Mutation
+type Mutation {
+  listCoursesByGrade(gradeLevel: EGradeLevel): [Course]
+  getCourseById(_id: String): Course
+  addCourse(course: CourseInput): Course
+  updateCourse(course: CourseInput): Course
+  removeCourse(_id: String): String
+
+  listLessonsInCourse(courseId: String): [Lesson]
+  getLessonById(_id: String): Lesson
+  addLesson(lesson: LessonInput): Lesson
+  updateLesson(lesson: LessonInput): Lesson
+  removeLesson(_id: String): String
+
+  getParticipationCourseById(_id: String): ParticipationCourse
+  addParticipationCourse(
+    participationCourse: ParticipationCourseInput
+  ): ParticipationCourse
+  updateParticipationCourse(
+    participationCourse: ParticipationCourseInput
+  ): ParticipationCourse
+  removeParticipationCourse(_id: String): String
+
+  getRiddleById(_id: String): Riddle
+  addRiddle(riddle: RiddleInput): Riddle
+  updateRiddle(riddle: RiddleInput): Riddle
+  removeRiddle(_id: String): String
+
+  getRiddleAttemptById(_id: String): RiddleAttempt
+  addRiddleAttempt(riddleAttempt: RiddleAttemptInput): RiddleAttempt
+  updateRiddleAttempt(riddleAttempt: RiddleAttemptInput): RiddleAttempt
+  removeRiddleAttempt(_id: String): String
+
+  listDocsByGrade(gradeLevel: EGradeLevel): [Document]
+  getDocumentById(_id: String): Document
+  addDocument(document: DocumentInput): Document
+  updateDocument(document: DocumentInput): Document
+  removeDocument(_id: String): String
+
+  listTestsByGrade(gradeLevel: EGradeLevel): [MockTest]
+  getMockTestById(_id: String): MockTest
+  addMockTest(mockTest: MockTestInput): MockTest
+  updateMockTest(mockTest: MockTestInput): MockTest
+  removeMockTest(_id: String): String
+
+  getTestQuestionById(_id: String): TestQuestion
+  addTestQuestion(testQuestion: TestQuestionInput): TestQuestion
+  updateTestQuestion(testQuestion: TestQuestionInput): TestQuestion
+  removeTestQuestion(_id: String): String
+
+  getTestRecordById(_id: String): TestRecord
+  addTestRecord(testRecord: TestRecordInput): TestRecord
+  updateTestRecord(testRecord: TestRecordInput): TestRecord
+  removeTestRecord(_id: String): String
+
+  getTestHistoryById(_id: String): TestHistory
+  addTestHistory(testHistory: TestHistoryInput): TestHistory
+  updateTestHistory(testHistory: TestHistoryInput): TestHistory
+  removeTestHistory(_id: String): String
 }

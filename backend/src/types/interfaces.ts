@@ -50,12 +50,12 @@ export interface IUserLoginArgs {
 
 export interface ICourse {
   _id?: string;
-  name: string;
-  gradeLevel: EGradeLevel;
-  description: string;
-  buyersCount: number;
-  createdAt: Date;
-  updatedAt: Date;
+  name?: string;
+  gradeLevel?: EGradeLevel;
+  description?: string;
+  buyersCount?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface ILesson {
@@ -102,6 +102,7 @@ export interface IDocument {
   _id?: string;
   name: string;
   type: string;
+  gradeLevel: EGradeLevel;
   url: string;
   downloadedCount: number;
   createdAt: Date;
@@ -114,6 +115,7 @@ export interface IMockTest {
   name: string;
   totalTime: number;
   takenCount: number;
+  userTakenTimes: number;
   createdAt: Date;
 }
 
@@ -121,7 +123,7 @@ export interface ITestQuestion {
   _id?: string;
   mockTestId: string;
   question: string;
-  score: string;
+  score: number;
   hint?: string;
   optionA: string;
   optionB: string;
@@ -150,5 +152,5 @@ export interface ITestHistory {
   attemptsCount: number;
   highestScore: number;
   doneTime: number;
-  userTakenTimesCount: number;
+  createdAt: Date;
 }

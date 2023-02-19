@@ -5,7 +5,7 @@ const ParticipationCourseSchema = new Schema<IParticipationCourse>(
   {
     courseId: { type: String, required: true },
     userId: { type: String, required: true },
-    isCompleted: { type: Boolean, required: false },
+    isCompleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

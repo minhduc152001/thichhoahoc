@@ -5,6 +5,11 @@ const DocumentSchema = new Schema<IDocument>(
   {
     name: { type: String, required: true },
     type: { type: String, required: true },
+    gradeLevel: {
+      type: String,
+      enum: ["G10", "G11", "G12", "collegePrep"],
+      required: true,
+    },
     url: { type: String, required: true },
     downloadedCount: { type: Number, default: 0 },
   },

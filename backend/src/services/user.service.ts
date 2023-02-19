@@ -12,7 +12,7 @@ const generateAccessToken = ({ userId, email }: IPayLoad) => {
       email,
     },
     process.env.JWT_SECRET as string,
-    { expiresIn: "30d" }
+    { expiresIn: "365d" }
   );
   return accessToken;
 };

@@ -7,6 +7,7 @@ const TestQuestionSchema = new Schema<ITestQuestion>(
     mockTestId: { type: String, required: true },
     question: { type: String, required: true },
     hint: { type: String, required: false },
+    score: { type: Number, required: true },
     optionA: { type: String, required: true },
     optionB: { type: String, required: true },
     optionC: { type: String, required: true },

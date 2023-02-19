@@ -6,10 +6,10 @@ export enum ESubscription {
 }
 
 export enum EGradeLevel {
-  Grade10 = "10",
-  Grade11 = "11",
-  Grade12 = "12",
-  CollegePrep = "college prep",
+  Grade10 = "G10",
+  Grade11 = "G11",
+  Grade12 = "G12",
+  CollegePrep = "collegePrep",
 }
 
 export enum ECorrectAnswer {

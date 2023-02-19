@@ -8,7 +8,7 @@ const CourseSchema = new Schema<ICourse>(
     buyersCount: { type: Number, required: true, default: 0 },
     gradeLevel: {
       type: String,
-      enum: ["10", "11", "12", "college prep"],
+      enum: ["G10", "G11", "G12", "collegePrep"],
       required: true,
     },
   },
