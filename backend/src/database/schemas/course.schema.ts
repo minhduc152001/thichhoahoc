@@ -5,6 +5,8 @@ const CourseSchema = new Schema<ICourse>(
   {
     name: { type: String, required: true },
     description: { type: String, required: false },
+    author: { type: String, required: true },
+    isFree: {type: Boolean, required: true},
     buyersCount: { type: Number, required: true, default: 0 },
     gradeLevel: {
       type: String,

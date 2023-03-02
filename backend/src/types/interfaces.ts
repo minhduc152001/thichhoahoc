@@ -22,6 +22,7 @@ export interface IUser {
   firstName: string;
   lastName: string;
   password: string;
+  avatar: string;
   isEmailVerified: boolean;
   confirmationCode: string | null;
   subscription: ESubscription;
@@ -53,9 +54,27 @@ export interface ICourse {
   name?: string;
   gradeLevel?: EGradeLevel;
   description?: string;
+  author: string;
+  isFree: boolean;
   buyersCount?: number;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface IQACourse {
+  _id?: string;
+  userId: string;
+  courseId: string;
+  content: string;
+  createdAt: Date;
+}
+
+export interface IReplyQACourse {
+  _id: string;
+  QACourseId: string;
+  userId: string;
+  reply: string;
+  createdAt: Date;
 }
 
 export interface ILesson {
@@ -65,6 +84,7 @@ export interface ILesson {
   description: string;
   text: string;
   videoUrl: string;
+  isCompleted: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

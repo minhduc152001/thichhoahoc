@@ -4,7 +4,7 @@ import { ECorrectAnswer } from "../../constants/enumTypes";
 
 const TestQuestionSchema = new Schema<ITestQuestion>(
   {
-    mockTestId: { type: String, required: true },
+    mockTestId: { type: Schema.Types.ObjectId as any, ref: 'MockTest' },
     question: { type: String, required: true },
     hint: { type: String, required: false },
     score: { type: Number, required: true },

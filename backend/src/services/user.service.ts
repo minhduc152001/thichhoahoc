@@ -1,6 +1,11 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { IPayLoad, IUserLoginArgs, IUserSignupArgs } from "../types/interfaces";
+import {
+  IPayLoad,
+  IUser,
+  IUserLoginArgs,
+  IUserSignupArgs,
+} from "../types/interfaces";
 import User from "../database/models/user.model";
 import { ApolloError } from "apollo-server-express";
 
@@ -98,7 +103,7 @@ export default class UserService {
     const user = await User.findOne({ email });
 
     if (!user) {
-      throw new ApolloError("Wrong email or password");
+      throw new ApolloError("Sai tài khoản hoặc mật khẩu");
     }
 
     const isCorrectPassword = await comparePassword(
@@ -106,7 +111,7 @@ export default class UserService {
       user.password as string
     );
 
-    if (!isCorrectPassword) throw new ApolloError("Wrong email or password");
+    if (!isCorrectPassword) throw new ApolloError("Sai tài khoản hoặc mật khẩu");
 
     // if (!user.isEmailVerified) {
     //   throw new ApolloError("Not verified");
@@ -133,5 +138,10 @@ export default class UserService {
         isEmailVerified: user.isEmailVerified,
       },
     };
+  };
+
+  static updateUser = async (args: IUser) => {
+    const user = await User.findByIdAndUpdate(args._id, { $set: args });
+    return user;
   };
 }

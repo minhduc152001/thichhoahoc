@@ -1,0 +1,69 @@
+.login-container {
+  margin-top: 14px;
+}
+.control-group {
+  font-size: 15px;
+  line-height: 1.5em;
+  color: #333;
+  margin: 0 0 7.5px;
+
+  label {
+    text-align: right;
+    display: inline-block;
+    vertical-align: middle;
+    width: 10em;
+    margin: 0 1em 0 0;
+  }
+
+  input {
+    height: 30px;
+    width: 420px;
+    padding: 0.5em 0.6em;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px #ddd;
+    border-radius: 4px;
+    vertical-align: middle;
+  }
+}
+
+.controls {
+  margin-left: 225px;
+  margin: 1.25em 0 0 11em;
+  .login-button {
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #2fab4a;
+    color: #fff;
+    display: inline-block;
+    line-height: normal;
+    white-space: nowrap;
+    vertical-align: middle;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    width: 86px;
+    height: 30px;
+    border-radius: 3px;
+  }
+  a {
+    font-weight: 400;
+    color: #f26222;
+    text-decoration: underline;
+    margin-left: 16px;
+  }
+  :hover {
+    opacity: 0.7;
+    transition: all 0.2s ease-in-out;
+  }
+}
+
+.error {
+  color: #d8000c;
+  margin-left: 165px;
+}
+
+.required-star {
+  margin-left: 4px;
+  color: #f36222;
+}

@@ -24,11 +24,24 @@ enum ECorrectAnswer {
 }
 
 # Input
+input UserInput {
+  _id: String
+  email: String
+  firstName: String
+  lastName: String
+  password: String
+  avatar: String
+  subscription: ESubscription
+  subscriptionExpiresAt: Date
+}
+
 input CourseInput {
   _id: String
   name: String
   gradeLevel: EGradeLevel
   description: String
+  author: String
+  isFree: Boolean 
   buyersCount: Int
 }
 
@@ -39,6 +52,7 @@ input LessonInput {
   description: String
   text: String
   videoUrl: String
+  isCompleted: Boolean
 }
 
 input ParticipationCourseInput {
@@ -129,7 +143,11 @@ type Course {
   name: String
   gradeLevel: EGradeLevel
   description: String
+  author: String
+  isFree: Boolean
   buyersCount: Int
+  createdAt: Date
+  updatedAt: Date
 }
 
 type Lesson {
@@ -139,6 +157,7 @@ type Lesson {
   description: String
   text: String
   videoUrl: String
+  isCompleted: Boolean
   createdAt: Date
   updatedAt: Date
 }
@@ -233,10 +252,13 @@ type TestHistory {
 type Query {
   getUserById: User
   listCourses: [Course]
+  listCourseIdsUserGot: [String]
 }
 
 # Mutation
 type Mutation {
+  updateUser(profile: UserInput): User
+
   listCoursesByGrade(gradeLevel: EGradeLevel): [Course]
   getCourseById(_id: String): Course
   addCourse(course: CourseInput): Course

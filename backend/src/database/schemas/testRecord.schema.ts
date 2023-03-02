@@ -4,8 +4,8 @@ import { ECorrectAnswer } from "../../constants/enumTypes";
 
 const ITestRecordSchema = new Schema<ITestRecord>(
   {
-    testQuestionId: { type: String, required: true },
-    userId: { type: String, required: true },
+    testQuestionId: { type: Schema.Types.ObjectId as any, ref: 'TestQuestion' },
+    userId: { type: Schema.Types.ObjectId as any, ref: 'User' },
     answer: { type: String, enum: ECorrectAnswer, required: true },
     isCorrect: { type: Boolean, required: true },
   },

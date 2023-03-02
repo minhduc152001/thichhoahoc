@@ -14,9 +14,12 @@ const resolvers = {
   Query: {
     getUserById: userResolvers.getUserById,
     listCourses: courseResolvers.listCourses,
+    listCourseIdsUserGot: participationCourseResolvers.listCourseIdsUserGot,
   },
 
   Mutation: {
+    updateUser: userResolvers.updateUser,
+
     listCoursesByGrade: courseResolvers.listCoursesByGrade,
     getCourseById: courseResolvers.getCourseById,
     addCourse: courseResolvers.addCourse,
