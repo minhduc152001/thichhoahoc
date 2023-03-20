@@ -1,13 +1,14 @@
 import React from "react";
 import TitleBox from "../TitleBox/TitleBox";
 import "./mainContent.scss";
-import Login from "../Login/Login";
 
-function MainContent() {
+function MainContent({ pageName, Component }) {
   return (
-    <div id="main-content">
-      <TitleBox />
-      <Login />
+    <div className="container-sm" style={{marginTop: "30px"}}>
+      {/* <div id="main-content"> */}
+        <TitleBox pageName={pageName} />
+        {<Component />}
+      {/* </div> */}
     </div>
   );
 }

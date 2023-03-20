@@ -53,6 +53,7 @@ export interface ICourse {
   _id?: string;
   name?: string;
   gradeLevel?: EGradeLevel;
+  img: string;
   description?: string;
   author: string;
   isFree: boolean;
@@ -94,6 +95,7 @@ export interface IParticipationCourse {
   userId: string;
   courseId: string;
   isCompleted: boolean;
+  completedLessons: Array<string>;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -68,7 +68,7 @@ export default class UserService {
   }: IUserSignupArgs): Promise<unknown> => {
     // check user exists
     if (await isEmailExisted(email))
-      throw new ApolloError("Email already exists");
+      throw new ApolloError("Email đã được đăng ký");
 
     // hash password
     let hashedPassword;
@@ -96,7 +96,15 @@ export default class UserService {
       // throw new Error("Something was wrong, try again!");
     }
 
-    return user;
+    const payload: IPayLoad = {
+      userId: user._id,
+      email: user.email,
+    };
+
+    // Generate token
+    const accessToken = generateAccessToken(payload);
+
+    return { ...user, accessToken };
   };
 
   static login = async ({ email, password }: IUserLoginArgs) => {
@@ -111,7 +119,8 @@ export default class UserService {
       user.password as string
     );
 
-    if (!isCorrectPassword) throw new ApolloError("Sai tài khoản hoặc mật khẩu");
+    if (!isCorrectPassword)
+      throw new ApolloError("Sai tài khoản hoặc mật khẩu");
 
     // if (!user.isEmailVerified) {
     //   throw new ApolloError("Not verified");

@@ -5,7 +5,7 @@ function Footer() {
   return (
     <div id="footer">
       <div id="footer-logo">
-        <img src="./footer_top_bg.png" alt="" />
+        <img src="/footer_top_bg.png" alt="" />
       </div>
       <div id="footer-header"></div>
       <div id="footer-content">
@@ -58,7 +58,7 @@ function Footer() {
                   Email: <a href="emailto:chemx@gmail.com">chemx@gmail.com</a>
                 </li>
                 <li>
-                  Facebook: <a href="/">fb.co/thichhoahoc.vn</a>
+                  Facebook: <a href="/">fb.co/chemx.fly.dev</a>
                 </li>
                 <li>
                   Youtube: <a href="/">ChemX Channel</a>

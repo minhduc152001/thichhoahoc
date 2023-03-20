@@ -1,0 +1,42 @@
+.tests-list-container {
+  display: flex;
+  #navbar-filter {
+    min-width: 200px;
+    position: relative;
+    z-index: 99;
+
+    .filter {
+      .orange-text {
+        color: #f26222;
+      }
+    }
+  }
+
+  #list-tests {
+    margin-top: 20px;
+    margin-left: 30px;
+    min-width: 80%;
+  }
+}
+.col-name-test {
+  width: 50%;
+  a {
+    color: #f26222;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  a:hover {
+    opacity: 0.7;
+    cursor: pointer;
+  }
+}
+
+h4 {
+  color: #f26222;
+  font-weight: 600;
+}
+
+.mt-50 {
+  margin-top: 50px;
+}

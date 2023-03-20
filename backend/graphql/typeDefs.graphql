@@ -39,9 +39,10 @@ input CourseInput {
   _id: String
   name: String
   gradeLevel: EGradeLevel
+  img: String
   description: String
   author: String
-  isFree: Boolean 
+  isFree: Boolean
   buyersCount: Int
 }
 
@@ -143,6 +144,7 @@ type Course {
   name: String
   gradeLevel: EGradeLevel
   description: String
+  img: String
   author: String
   isFree: Boolean
   buyersCount: Int
@@ -167,6 +169,7 @@ type ParticipationCourse {
   userId: String
   courseId: String
   isCompleted: Boolean
+  completedLessons: [String]
   createdAt: Date
   updatedAt: Date
 }

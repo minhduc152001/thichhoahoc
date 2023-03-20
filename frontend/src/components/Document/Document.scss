@@ -1,0 +1,25 @@
+.main-list-documents {
+  //   display: flex;
+  h4 {
+    font-size: 20px;
+  }
+
+  .table-bordered {
+    .bg-success-color {
+      background-color: #17a74a;
+      color: white;
+    }
+
+    .title-doc {
+      padding-left: 20px;
+      font-weight: 500;
+      color: #f26222;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .title-doc:hover {
+      opacity: 0.7;
+    }
+  }
+}

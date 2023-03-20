@@ -49,9 +49,10 @@ function Login() {
             name="email"
             placeholder="Email đăng nhập"
             onChange={(e) => {
-              setEmail(e.target.value);
+              setEmail(e.target.value.trim());
               ignoreError();
             }}
+            required
           />
         </div>
         <div className="control-group">
@@ -65,14 +66,16 @@ function Login() {
             name="pwd"
             placeholder="Mật khẩu"
             onChange={(e) => {
-              setPassword(e.target.value);
+              setPassword(e.target.value.trim());
               ignoreError();
             }}
+            required
           />
         </div>
         {hasError && (
           <div className="error">
-            <i class="fa fa-exclamation-circle" aria-hidden="true"></i> {error}
+            <i className="fa fa-exclamation-circle" aria-hidden="true"></i>{" "}
+            {error}
           </div>
         )}
         <div className="controls">

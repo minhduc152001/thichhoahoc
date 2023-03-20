@@ -1,0 +1,47 @@
+.pure-g {
+  -webkit-flex-flow: row wrap;
+  align-content: flex-start;
+  display: flex;
+  .rcm-side-bar {
+    padding-right: 40px;
+    width: 33.3333%;
+    display: inline-block;
+    zoom: 1;
+    letter-spacing: normal;
+    word-spacing: normal;
+    vertical-align: top;
+    text-rendering: auto;
+  }
+
+  .main-box {
+    .main-title h1 {
+      text-align: left;
+    }
+    width: 66.6667%;
+    .date-update {
+      margin-top: 10px;
+      color: #bbb;
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+
+    .remind-mes {
+      font-style: italic;
+      margin: 10px 0px;
+      line-height: 175%;
+    }
+  }
+}
+
+.download-area {
+  margin-left: 33.3333%;
+  //   margin-right: 30%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.doc-container .sharing-networks {
+  float: none;
+  width: 36%;
+  margin: 30px auto;
+}

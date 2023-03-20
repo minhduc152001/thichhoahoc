@@ -1,0 +1,18 @@
+.answer-show {
+  .correct-choice {
+    color: rgb(7, 188, 12);
+  }
+
+  .explaination-answer {
+    margin-top: 10px;
+    span {
+      color: rgb(28, 123, 255);
+      font-size: 18px;
+    }
+    p {
+      margin-left: 10px;
+      font-style: italic;
+      font-size: 16px;
+    }
+  }
+}

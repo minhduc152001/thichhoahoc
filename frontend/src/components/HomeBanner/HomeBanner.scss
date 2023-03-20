@@ -1,0 +1,47 @@
+.home-banner {
+  display: flex;
+  background-color: var(--bs-orange);
+  border-bottom: #f06423 2px solid;
+  .main-home-banner {
+    flex-flow: row wrap;
+    float: left;
+    width: 66.6667%;
+    .banner-text {
+      font-size: 21px;
+      padding: 5px 40px;
+      margin-right: 15px;
+      color: white;
+      font-style: italic;
+      font-family: "Cormorant Upright", serif;
+
+      a {
+        margin-left: 10px;
+        img {
+          width: 44px;
+        }
+      }
+    }
+  }
+
+  .welcome-area {
+    display: flex;
+    width: 33.3333%;
+    img {
+      width: 74px;
+      height: 60px;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    .welcome-box {
+      cursor: default;
+      margin: auto 20px;
+      font-weight: 500;
+      padding: 8px 6px;
+      border: 1px solid #cf4406;
+      border-radius: 5px;
+      color: #da5213;
+      width: fit-content;
+    }
+  }
+}

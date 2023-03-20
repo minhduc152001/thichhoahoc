@@ -22,7 +22,7 @@ function doBalance() {
   } catch (e) {
     if (e instanceof ParseError) {
       // Error message object with start and possibly end character indices
-      msgElem.textContent = "Syntax error: " + e.message;
+      msgElem.textContent = "Lỗi cú pháp: " + e.message;
       const start = e.start;
       let end = e.end !== undefined ? e.end : e.start;
       while (end > start && [" ", "\t"].includes(formulaStr.charAt(end - 1)))
@@ -37,9 +37,9 @@ function doBalance() {
       } else codeOutElem.append(createElem("span", " ", "error"));
     } else if (e instanceof Error) {
       // Simple error message string
-      msgElem.textContent = "Syntax error: " + e.message;
+      msgElem.textContent = "Lỗi cú pháp: " + e.message;
     } else {
-      msgElem.textContent = "Assertion error";
+      msgElem.textContent = "Lỗi không xác định";
     }
     return;
   }
@@ -115,7 +115,8 @@ class Parser {
       } else if (next == "=") {
         this.tok.consume(next);
         break;
-      } else throw new ParseError("Plus or equal sign expected", this.tok.pos);
+      } else
+        throw new ParseError("Cần có dấu cộng hoặc dấu bằng", this.tok.pos);
     }
     let rhs = [this.parseTerm()];
     while (true) {
@@ -124,7 +125,11 @@ class Parser {
       else if (next == "+") {
         this.tok.consume(next);
         rhs.push(this.parseTerm());
-      } else throw new ParseError("Plus or end expected", this.tok.pos);
+      } else
+        throw new ParseError(
+          "Cần có dấu cộng hoặc kết thúc phương trình",
+          this.tok.pos
+        );
     }
     return new Equation(lhs, rhs);
   }
@@ -144,10 +149,7 @@ class Parser {
       } else if (next !== null && /^[A-Z][a-z]*$/.test(next))
         items.push(this.parseElement());
       else if (next !== null && /^[0-9]+$/.test(next))
-        throw new ParseError(
-          "Invalid term - number not expected",
-          this.tok.pos
-        );
+        throw new ParseError("Không hợp lệ - thừa số", this.tok.pos);
       else break;
     }
     // Parse optional charge
@@ -156,21 +158,22 @@ class Parser {
       this.tok.consume(next);
       next = this.tok.peek();
       if (next === null)
-        throw new ParseError("Number or sign expected", this.tok.pos);
+        throw new ParseError("Cần có số hoặc dấu", this.tok.pos);
       else {
         charge = this.parseOptionalNumber();
         next = this.tok.peek();
       }
       if (next == "+") charge = +charge; // No-op
       else if (next == "-") charge = -charge;
-      else throw new ParseError("Sign expected", this.tok.pos);
+      else throw new ParseError("Cần có dấu", this.tok.pos);
       this.tok.take(); // Consume the sign
     }
     // Check and postprocess term
     if (electron) {
       if (items.length > 0)
         throw new ParseError(
-          "Invalid term - electron needs to stand alone",
+          // "Invalid term - electron needs to stand alone",
+          "Vế phương trình không hợp lệ - electron cần phải đứng một mình",
           startPos,
           this.tok.pos
         );
@@ -179,13 +182,18 @@ class Parser {
         charge = -1;
       if (charge != -1)
         throw new ParseError(
-          "Invalid term - invalid charge for electron",
+          // "Invalid term - invalid charge for electron",
+          "Vế phương trình không hợp lệ - điện tích sai",
           startPos,
           this.tok.pos
         );
     } else {
       if (items.length == 0)
-        throw new ParseError("Invalid term - empty", startPos, this.tok.pos);
+        throw new ParseError(
+          "Hai vế phương trình chưa hợp lệ",
+          startPos,
+          this.tok.pos
+        );
       if (charge === null) charge = 0;
     }
     return new Term(items, charge);
@@ -203,11 +211,12 @@ class Parser {
       else if (next == ")") {
         this.tok.consume(next);
         if (items.length == 0)
-          throw new ParseError("Empty group", startPos, this.tok.pos);
+          throw new ParseError("Không có nhóm chất", startPos, this.tok.pos);
         break;
       } else
         throw new ParseError(
-          "Element, group, or closing parenthesis expected",
+          // "Element, group, or closing parenthesis expected",
+          "Cần chất, nhóm chất hoặc đóng ngoặc đơn",
           this.tok.pos
         );
     }
@@ -216,7 +225,7 @@ class Parser {
   // Parses and returns an element.
   parseElement() {
     const name = this.tok.take();
-    if (!/^[A-Z][a-z]*$/.test(name)) throw new Error("Assertion error");
+    if (!/^[A-Z][a-z]*$/.test(name)) throw new Error("Lỗi không xác định");
     return new ChemElem(name, this.parseOptionalNumber());
   }
   // Parses a number if it's the next token, returning a non-negative integer, with a default of 1.
@@ -243,24 +252,24 @@ class Tokenizer {
     const match = /^([A-Za-z][a-z]*|[0-9]+|[+\-^=()])/.exec(
       this.str.substring(this.pos)
     );
-    if (match === null) throw new ParseError("Invalid symbol", this.pos);
+    if (match === null) throw new ParseError("Ký tự không hợp lệ", this.pos);
     return match[0];
   }
   // Returns the next token as a string and advances this tokenizer past the token.
   take() {
     const result = this.peek();
-    if (result === null) throw new Error("Advancing beyond last token");
+    if (result === null) throw new Error("Vượt quá vị trí token");
     this.pos += result.length;
     this.skipSpaces();
     return result;
   }
   // Takes the next token and checks that it matches the given string, or throws an exception.
   consume(s) {
-    if (this.take() != s) throw new Error("Token mismatch");
+    if (this.take() != s) throw new Error("Mã thông báo không khớp");
   }
   skipSpaces() {
     const match = /^[ \t]*/.exec(this.str.substring(this.pos));
-    if (match === null) throw new Error("Assertion error");
+    if (match === null) throw new Error("Lỗi không xác định");
     this.pos += match[0].length;
   }
 }
@@ -300,7 +309,7 @@ class Equation {
       coefs !== undefined &&
       coefs.length != this.leftSide.length + this.rightSide.length
     )
-      throw new RangeError("Mismatched number of coefficients");
+      throw new RangeError("Số lượng hệ số không phù hợp");
     let node = document.createDocumentFragment();
     let j = 0;
     function termsToHtml(terms) {
@@ -377,7 +386,7 @@ class Term {
 class Group {
   constructor(items, count) {
     if (count < 1)
-      throw new RangeError("Assertion error: Count must be a positive integer");
+      throw new RangeError("Lỗi không xác định: Số phải là số nguyên dương");
     this.items = items.slice();
     this.count = count;
   }
@@ -409,7 +418,7 @@ class ChemElem {
     this.name = name;
     this.count = count;
     if (count < 1)
-      throw new RangeError("Assertion error: Count must be a positive integer");
+      throw new RangeError("Lỗi không xác định: Số phải là số nguyên dương");
   }
   getElements(resultSet) {
     resultSet.add(this.name);
@@ -430,7 +439,8 @@ class Matrix {
   constructor(numRows, numCols) {
     this.numRows = numRows;
     this.numCols = numCols;
-    if (numRows < 0 || numCols < 0) throw new RangeError("Illegal argument");
+    if (numRows < 0 || numCols < 0)
+      throw new RangeError("Số lượng truyền vào không hợp lệ");
     // Initialize with zeros
     let row = [];
     for (let j = 0; j < numCols; j++) row.push(0);
@@ -441,20 +451,20 @@ class Matrix {
   // Returns the value of the given cell in the matrix, where r is the row and c is the column.
   get(r, c) {
     if (r < 0 || r >= this.numRows || c < 0 || c >= this.numCols)
-      throw new RangeError("Index out of bounds");
+      throw new RangeError("Số lượng vượt quá giới hạn");
     return this.cells[r][c];
   }
   // Sets the given cell in the matrix to the given value, where r is the row and c is the column.
   set(r, c, val) {
     if (r < 0 || r >= this.numRows || c < 0 || c >= this.numCols)
-      throw new RangeError("Index out of bounds");
+      throw new RangeError("Số lượng vượt quá giới hạn");
     this.cells[r][c] = val;
   }
   /* Private helper functions for gaussJordanEliminate() */
   // Swaps the two rows of the given indices in this matrix. The degenerate case of i == j is allowed.
   swapRows(i, j) {
     if (i < 0 || i >= this.numRows || j < 0 || j >= this.numRows)
-      throw new RangeError("Index out of bounds");
+      throw new RangeError("Số lượng vượt quá giới hạn");
     const temp = this.cells[i];
     this.cells[i] = this.cells[j];
     this.cells[j] = temp;
@@ -570,7 +580,7 @@ function solve(matrix) {
   for (i = 0; i < matrix.numRows - 1; i++) {
     if (countNonzeroCoeffs(i) > 1) break;
   }
-  if (i == matrix.numRows - 1) throw new RangeError("All-zero solution"); // Unique solution with all coefficients zero
+  if (i == matrix.numRows - 1) throw new RangeError("Không có kết quả"); // Unique solution with all coefficients zero
   // Add an inhomogeneous equation
   matrix.set(matrix.numRows - 1, i, 1);
   matrix.set(matrix.numRows - 1, matrix.numCols - 1, 1);
@@ -580,7 +590,7 @@ function extractCoefficients(matrix) {
   const rows = matrix.numRows;
   const cols = matrix.numCols;
   if (cols - 1 > rows || matrix.get(cols - 2, cols - 2) == 0)
-    throw new RangeError("Multiple independent solutions");
+    throw new RangeError("Có nhiều kết quả khác nhau");
   let lcm = 1;
   for (let i = 0; i < cols - 1; i++)
     lcm = checkedMultiply(lcm / gcd(lcm, matrix.get(i, i)), matrix.get(i, i));
@@ -590,20 +600,20 @@ function extractCoefficients(matrix) {
       checkedMultiply(lcm / matrix.get(i, i), matrix.get(i, cols - 1))
     );
   if (coefs.every((x) => x == 0))
-    throw new RangeError("Assertion error: All-zero solution");
+    throw new RangeError("Lỗi không xác định: Không có kết quả");
   return coefs;
 }
 // Throws an exception if there's a problem, otherwise returns silently.
 function checkAnswer(eqn, coefs) {
   if (coefs.length != eqn.leftSide.length + eqn.rightSide.length)
-    throw new Error("Assertion error: Mismatched length");
+    throw new Error("Lỗi không xác định: Độ dài không phù hợp");
   function isZero(x) {
     if (typeof x != "number" || isNaN(x) || Math.floor(x) != x)
-      throw new Error("Assertion error: Not an integer");
+      throw new Error("Lỗi không xác định: Phải là một số nguyên");
     return x == 0;
   }
   if (coefs.every(isZero))
-    throw new Error("Assertion error: All-zero solution");
+    throw new Error("Lỗi không xác định: Không có kết quả");
   for (const elem of eqn.getElements()) {
     let sum = 0;
     let j = 0;
@@ -618,7 +628,7 @@ function checkAnswer(eqn, coefs) {
       );
       j++;
     }
-    if (sum != 0) throw new Error("Assertion error: Incorrect balance");
+    if (sum != 0) throw new Error("Lỗi không xác định: Cân bằng sai");
   }
 }
 /*---- Simple math functions ----*/
@@ -626,7 +636,7 @@ const INT_MAX = 9007199254740992; // 2^53
 // Returns the given string parsed into a number, or throws an exception if the result is too large.
 function checkedParseInt(str) {
   const result = parseInt(str, 10);
-  if (isNaN(result)) throw new RangeError("Not a number");
+  if (isNaN(result)) throw new RangeError("Phải là một số");
   return checkOverflow(result);
 }
 // Returns the sum of the given integers, or throws an exception if the result is too large.
@@ -639,13 +649,14 @@ function checkedMultiply(x, y) {
 }
 // Throws an exception if the given integer is too large, otherwise returns it.
 function checkOverflow(x) {
-  if (Math.abs(x) >= INT_MAX) throw new RangeError("Arithmetic overflow");
+  if (Math.abs(x) >= INT_MAX)
+    throw new RangeError("Số quá lớn - không thể tính toán");
   return x;
 }
 // Returns the greatest common divisor of the given integers.
 function gcd(x, y) {
   if (typeof x != "number" || typeof y != "number" || isNaN(x) || isNaN(y))
-    throw new Error("Invalid argument");
+    throw new Error("Giá trị không phù hợp");
   x = Math.abs(x);
   y = Math.abs(y);
   while (y != 0) {
@@ -671,3 +682,6 @@ function createSpan(cls, text) {
   result.className = cls;
   return result;
 }
+
+document.getElementById("balance-button").addEventListener("click", doBalance);
+document.getElementById("random-button").addEventListener("click", doRandom);

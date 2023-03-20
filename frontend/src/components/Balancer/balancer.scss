@@ -1,0 +1,46 @@
+#inputFormula {
+  width: 60%;
+  height: 41px;
+  border-radius: 6px;
+  border: 2px solid rgb(197, 197, 255);
+  padding-left: 10px;
+  margin-bottom: 20px;
+}
+
+.errorCharacter {
+  color: red;
+}
+
+button {
+  margin-bottom: 15px;
+}
+#random-button {
+  margin-left: 20px;
+}
+
+p {
+  font-size: 18px;
+  .output {
+    margin-left: 8px;
+  }
+}
+
+.guide-line {
+  h4 {
+    font-weight: 600;
+  }
+
+  h6 {
+    font-weight: 600;
+    margin: 4px 0;
+  }
+  p {
+    margin-left: 12px;
+    font-size: 16px;
+  }
+}
+.guide-toggle {
+  .btn-guide-box, h4 {
+    text-align: center;
+  }
+}

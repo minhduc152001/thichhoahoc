@@ -1,0 +1,43 @@
+.recommend-side-bar {
+  //   margin: 20px;
+  .box-side {
+    margin-top: 40px;
+    .top-content {
+      background: url(../../../public/rank_box_bg.png) no-repeat left 10px
+        center;
+      background-size: auto 100%;
+      color: #17a74a;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      height: 50px;
+      line-height: 50px;
+      border-bottom: 3px solid #17a74a;
+      box-sizing: border-box;
+      padding-left: 70px;
+    }
+
+    .box-side-content {
+      div,
+      a {
+        margin: 12px auto 12px 30px;
+        cursor: pointer;
+        color: #333;
+      }
+
+      div:hover {
+        color: rgb(0, 0, 0);
+        text-decoration: underline;
+      }
+
+      a {
+        color: #f26222;
+        text-decoration: none;
+        text-transform: uppercase;
+        display: block;
+        font-style: 20px;
+        font-weight: 600;
+      }
+    }
+  }
+}
