@@ -60,3 +60,18 @@
     }
   }
 }
+
+@media screen and (max-width: 770px) {
+  #footer {
+    #footer-content {
+      .container {
+        .pure-group {
+          display: block;
+        }
+        .group {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

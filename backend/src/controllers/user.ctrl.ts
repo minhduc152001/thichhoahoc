@@ -45,4 +45,40 @@ export default class UserCtrl {
       res.status(400).json({ error });
     }
   };
+
+  static getAllUsers = async (req: Request, res: Response) => {
+    try {
+      const users = await UserService.getAllUsers();
+      return res.status(200).json({ users });
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  };
+
+  static getUser = async (req: Request, res: Response) => {
+    try {
+      const user = await UserService.getUserById(req.params.userId);
+      return res.status(200).json({ user });
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  };
+
+  static updateUser = async (req: Request, res: Response) => {
+    try {
+      await UserService.updateUser({ _id: req.params.userId, ...req.body });
+      return res.status(200).json({ action: "updated user", static: "success" });
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  };
+
+  static deleteUserById = async (req: Request, res: Response) => {
+    try {
+      await UserService.deleteUserById(req.params.userId);
+      return res.status(200).json({ action: "deleted user", status: "success" });
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  };
 }

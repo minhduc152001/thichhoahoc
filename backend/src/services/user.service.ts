@@ -45,6 +45,10 @@ const isEmailExisted = async (email: string) => {
 };
 
 export default class UserService {
+  static getAllUsers = async () => {
+    const users = await User.find();
+    return users;
+  };
   /**
    * get user by id
    * @param {string} id
@@ -152,5 +156,9 @@ export default class UserService {
   static updateUser = async (args: IUser) => {
     const user = await User.findByIdAndUpdate(args._id, { $set: args });
     return user;
+  };
+
+  static deleteUserById = async (userId: string) => {
+    await User.findByIdAndDelete(userId);
   };
 }

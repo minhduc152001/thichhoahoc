@@ -8,7 +8,16 @@ const IRiddleAttemptSchema = new Schema<IRiddleAttempt>(
     isCorrect: { type: Boolean },
     answer: { type: String, required: true },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    id: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        // delete ret._id
+      },
+    },
+  }
 );
 
 export default IRiddleAttemptSchema;

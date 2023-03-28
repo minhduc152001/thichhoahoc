@@ -1,10 +1,11 @@
 import { EGradeLevel } from "../constants/enumTypes";
 import Course from "../database/models/course.model";
+import ParticipationCourse from "../database/models/participationCourse.model";
 import { ICourse } from "../types/interfaces";
 
 export default class CourseService {
   static listCourses = async () => {
-    const courses = await Course.find();
+    const courses = await Course.find().populate("lessons").exec();
     return courses;
   };
 
@@ -14,7 +15,7 @@ export default class CourseService {
   };
 
   static getCourseById = async (id: string) => {
-    const course = await Course.findById(id);
+    const course = await Course.findById(id).populate("lessons").exec();
     return course;
   };
 

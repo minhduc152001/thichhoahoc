@@ -10,7 +10,16 @@ const ITestHistorySchema = new Schema<ITestHistory>(
     doneTime: { type: Number, required: true, default: 0 },
     createdAt: { type: Date, default: Date.now() },
   },
-  { timestamps: false }
+  {
+    timestamps: true,
+    id: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        // delete ret._id
+      },
+    },
+  }
 );
 
 export default ITestHistorySchema;

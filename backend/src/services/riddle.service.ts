@@ -2,6 +2,11 @@ import Riddle from "../database/models/riddle.model";
 import { IRiddle } from "../types/interfaces";
 
 export default class RiddleService {
+  static listRiddles = async () => {
+    const riddles = await Riddle.find();
+    return riddles;
+  };
+
   static getRiddleById = async (id: string) => {
     const riddle = await Riddle.findById(id);
     return riddle;

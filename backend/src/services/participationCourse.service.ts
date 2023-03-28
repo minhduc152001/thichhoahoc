@@ -1,3 +1,4 @@
+import Course from "../database/models/course.model";
 import ParticipationCourse from "../database/models/participationCourse.model";
 import { IParticipationCourse } from "../types/interfaces";
 
@@ -17,9 +18,18 @@ export default class ParticipationCourseService {
   static addParticipationCourse = async (
     participationCourseArgs: IParticipationCourse
   ) => {
-    const [participationCourse] = await ParticipationCourse.insertMany([
-      participationCourseArgs,
-    ]);
+    const participationCourse = new ParticipationCourse(
+      participationCourseArgs
+    );
+    participationCourse.save().then(async (record) => {
+      await Course.findByIdAndUpdate(
+        record.courseId,
+        {
+          $push: { students: record.userId },
+        },
+        { new: true }
+      );
+    });
     return participationCourse;
   };
 

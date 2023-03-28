@@ -8,7 +8,16 @@ const ParticipationCourseSchema = new Schema<IParticipationCourse>(
     isCompleted: { type: Boolean, default: false },
     completedLessons: { type: [String], default: [] },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    id: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        // delete ret._id
+      },
+    },
+  }
 );
 
 export default ParticipationCourseSchema;

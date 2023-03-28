@@ -13,7 +13,16 @@ const DocumentSchema = new Schema<IDocument>(
     url: { type: String, required: true },
     downloadedCount: { type: Number, default: 0 },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    id: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        // delete ret._id
+      },
+    },
+  }
 );
 
 export default DocumentSchema;

@@ -11,9 +11,10 @@ const firebaseConfig = {
   storageBucket: "thesis-7edb1.appspot.com",
   messagingSenderId: "667252813371",
   appId: "1:667252813371:web:576c9965090cab6d27f61e",
-  measurementId: "G-X86Q978M89"
+  measurementId: "G-X86Q978M89",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const storage = getStorage(app);
+const storage = getStorage(app, process.env.REACT_APP_BUCKET_URL);
+export default storage;

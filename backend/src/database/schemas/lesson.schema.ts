@@ -3,7 +3,7 @@ import { ILesson } from "../../types/interfaces";
 
 const LessonSchema = new Schema<ILesson>(
   {
-    courseId: { type: Schema.Types.ObjectId as any, ref: 'Course' },
+    courseId: { type: Schema.Types.ObjectId as any, ref: "Course" },
     name: { type: String, required: true },
     description: { type: String, required: false },
     text: { type: String, required: true },
@@ -13,7 +13,16 @@ const LessonSchema = new Schema<ILesson>(
     },
     isCompleted: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    id: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        // delete ret._id
+      },
+    },
+  }
 );
 
 export default LessonSchema;

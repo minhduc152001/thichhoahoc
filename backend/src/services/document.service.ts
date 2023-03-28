@@ -3,6 +3,10 @@ import Document from "../database/models/document.model";
 import { IDocument } from "../types/interfaces";
 
 export default class DocumentService {
+  static listDocs = async () => {
+    return await Document.find();
+  };
+
   static listDocsByGrade = async (gradeLevel: EGradeLevel) => {
     const docs = await Document.find({ gradeLevel });
     return docs;

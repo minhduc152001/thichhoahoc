@@ -8,7 +8,16 @@ const RiddleSchema = new Schema<IRiddle>(
     hint: { type: String, required: false },
     correctAnswer: { type: [String], required: true },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    id: true,
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        // delete ret._id
+      },
+    },
+  }
 );
 
 export default RiddleSchema;

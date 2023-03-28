@@ -1,7 +1,13 @@
+import Course from "../database/models/course.model";
 import Lesson from "../database/models/lesson.model";
 import { ILesson } from "../types/interfaces";
 
 export default class LessonService {
+  static listLessons = async () => {
+    const lessons = await Lesson.find();
+    return lessons;
+  };
+
   static listLessonsInCourse = async (courseId: string) => {
     const lessons = await Lesson.find({ courseId });
     return lessons;
@@ -14,6 +20,13 @@ export default class LessonService {
 
   static addLesson = async (lessonArgs: ILesson) => {
     const [lesson] = await Lesson.insertMany([lessonArgs]);
+    await Course.findByIdAndUpdate(
+      lessonArgs.courseId,
+      {
+        $push: { lessons: lesson._id },
+      },
+      { new: true }
+    );
     return lesson;
   };
 

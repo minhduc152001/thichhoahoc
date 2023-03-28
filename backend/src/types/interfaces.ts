@@ -57,7 +57,8 @@ export interface ICourse {
   description?: string;
   author: string;
   isFree: boolean;
-  buyersCount?: number;
+  students?: number;
+  lessons?: [ILesson]
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -94,8 +95,8 @@ export interface IParticipationCourse {
   _id?: string;
   userId: string;
   courseId: string;
-  isCompleted: boolean;
-  completedLessons: Array<string>;
+  isCompleted?: boolean;
+  completedLessons?: Array<string>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -139,6 +140,7 @@ export interface IMockTest {
   takenCount: number;
   userTakenTimes: number;
   createdAt: Date;
+  questions?: [ITestQuestion];
 }
 
 export interface ITestQuestion {

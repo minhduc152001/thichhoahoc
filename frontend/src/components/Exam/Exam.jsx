@@ -190,7 +190,7 @@ function Exam() {
     <>
       <div>
         <MainTitle
-          title={"kiểm tra vào lớp 10 trường THPT Armsterdam Hà Nội 2023"}
+          title={"kiểm tra vào lớp 10 trường THPT Amsterdam Hà Nội 2023"}
         />
         <div className="main-test">
           <div className="test-questions">

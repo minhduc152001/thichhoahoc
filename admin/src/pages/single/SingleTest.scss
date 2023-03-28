@@ -1,0 +1,24 @@
+.question-box {
+  margin-bottom: 16px;
+  .question-header {
+    .question-number {
+      font-weight: 600;
+    }
+  }
+
+  .question-content {
+    .correct-answer {
+      color: green;
+      font-weight: 600;
+    }
+
+    .question-explain {
+      color: rgb(187, 0, 0);
+      font-style: italic;
+      font-weight: bold;
+      .explaination {
+        font-weight: 400;
+      }
+    }
+  }
+}

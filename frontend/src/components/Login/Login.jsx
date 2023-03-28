@@ -25,6 +25,13 @@ function Login() {
       if (response.status === 200) {
         localStorage.setItem("token", response.data.loginResult.accessToken);
         localStorage.setItem("email", response.data.loginResult.profile.email);
+
+        localStorage.setItem(
+          "isAdmin",
+          response.data.loginResult.profile.email === "admin@gmail.com"
+            ? "true"
+            : "false"
+        );
         window.location.href = "/";
       }
     } catch (error) {

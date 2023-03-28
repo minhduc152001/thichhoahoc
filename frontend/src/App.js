@@ -19,49 +19,56 @@ import Document from "./pages/Document/Document";
 import DetailDoc from "./pages/DetailDoc/DetailDoc";
 import Payment from "./pages/Payment/Payment";
 import LearnGuide from "./pages/LearnGuide/LearnGuide";
+import NotFound from "./pages/NotFound/NotFound";
+import AdminPage from "./pages/Admin/Admin";
+import Topbar from "./components/topbar/Topbar";
 // import { useContext } from "react";
 // import { ParentProvider } from "./store/Provider";
 
 function App() {
   // const useStore = useContext(ParentProvider);
+  const email = localStorage.getItem("email");
+  
   return (
-    <div className="App">
+    <>
       <Header />
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/dang-nhap" element={<Login />} />
-        <Route path="/dang-ky" element={<Signup />} />
-        <Route path="/gioi-thieu" element={<Intro />} />
-        <Route path="/can-bang-pthh" element={<Balancer />} />
-        <Route path="/khoa-hoc" element={<ListCourses />} />
-        <Route
-          path="/hoc/:courseId/bai-hoc/:lessonId"
-          element={<LearnScreen />}
+      <div className="App">
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
         />
-        <Route path="/phong-thi" element={<TestRoom />} />
-        <Route path="/do-vui" element={<Riddle />} />
-        <Route path="/do-vui/:riddleId" element={<RiddleAnswer />} />
-        <Route path="/lam-bai-thi/:testId" element={<Exam />} />
-        <Route path="/doc-tai-lieu/:documentId" element={<DetailDoc />} />
-        <Route path="/tai-lieu" element={<Document />} />
-        <Route path="/thanh-toan" element={<Payment />} />
-        <Route path="/huong-dan" element={<LearnGuide />} />
-        <Route path="*" element={<p>Not found</p>} />
-      </Routes>
-      <Footer />
-    </div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/dang-nhap" element={<Login />} />
+          <Route path="/dang-ky" element={<Signup />} />
+          <Route path="/gioi-thieu" element={<Intro />} />
+          <Route path="/can-bang-pthh" element={<Balancer />} />
+          <Route path="/khoa-hoc" element={<ListCourses />} />
+          <Route
+            path="/hoc/:courseId/bai-hoc/:lessonId"
+            element={<LearnScreen />}
+          />
+          <Route path="/phong-thi" element={<TestRoom />} />
+          <Route path="/do-vui" element={<Riddle />} />
+          <Route path="/do-vui/:riddleId" element={<RiddleAnswer />} />
+          <Route path="/lam-bai-thi/:testId" element={<Exam />} />
+          <Route path="/doc-tai-lieu/:documentId" element={<DetailDoc />} />
+          <Route path="/tai-lieu" element={<Document />} />
+          <Route path="/thanh-toan" element={<Payment />} />
+          <Route path="/huong-dan" element={<LearnGuide />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Footer />
+      </div>
+    </>
   );
 }
 

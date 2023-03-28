@@ -45,3 +45,27 @@
     }
   }
 }
+
+@media screen and (max-width: 650px) {
+  .home-banner {
+    display: block;
+    .main-home-banner {
+      width: 100%;
+    }
+
+    .welcome-area {
+      display: flex;
+      width: 100%;
+    }
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .home-banner {
+    .main-home-banner {
+      .banner-text {
+        font-size: 16px;
+      }
+    }
+  }
+}

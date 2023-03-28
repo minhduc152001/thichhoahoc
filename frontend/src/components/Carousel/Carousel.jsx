@@ -11,7 +11,7 @@ function Carousel() {
       >
         <div class="carousel-inner">
           <div class="carousel-item ">
-            <img src="./slide-2-main.jpeg" class="d-block w-100" alt="..." />
+            <img src="./slide-1.png" class="d-block w-100" alt="..." />
           </div>
           <div class="carousel-item">
             <img src="./slide-2.jpeg" class="d-block w-100" alt="..." />
