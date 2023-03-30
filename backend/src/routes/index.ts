@@ -6,6 +6,7 @@ import lessonRoutes from "./lesson.routes";
 import riddleRoutes from "./riddle.routes";
 import documentRoutes from "./document.routes";
 import testRoutes from "./test.routes";
+import partipationCourseRoutes from "./partipationCourse.routes";
 
 export default (app: Application) => {
   healthRoutes(app);
@@ -15,4 +16,5 @@ export default (app: Application) => {
   riddleRoutes(app);
   documentRoutes(app);
   testRoutes(app);
+  partipationCourseRoutes(app);
 };

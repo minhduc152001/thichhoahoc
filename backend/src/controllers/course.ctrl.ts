@@ -11,6 +11,17 @@ export default class CourseCtrl {
     }
   };
 
+  static getCoursesAndCompletion = async (req: Request, res: Response) => {
+    try {
+      const coursesAndCompletion = await CourseService.getCoursesAndCompletion(
+        req.params.userId
+      );
+      return res.status(200).json({ coursesAndCompletion });
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  };
+
   static addCourse = async (req: Request, res: Response) => {
     try {
       const course = await CourseService.addCourse(req.body);

@@ -58,9 +58,14 @@ export interface ICourse {
   author: string;
   isFree: boolean;
   students?: number;
-  lessons?: [ILesson]
+  lessons?: [ILesson];
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface ICourseIdAndUserId {
+  courseId: string;
+  userId: string;
 }
 
 export interface IQACourse {
@@ -97,8 +102,9 @@ export interface IParticipationCourse {
   courseId: string;
   isCompleted?: boolean;
   completedLessons?: Array<string>;
-  createdAt: Date;
-  updatedAt: Date;
+  newCompletedLessonId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IRiddle {

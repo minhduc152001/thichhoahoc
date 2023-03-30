@@ -238,7 +238,10 @@ function Header() {
                   </a>
                   <a href="/profile">
                     <div className="avatar">
-                      <img src="/default_avatar.png" alt="Ảnh mặc định" />
+                      <img
+                        src={localStorage.getItem("avatar")}
+                        alt="Ảnh mặc định"
+                      />
                     </div>
                   </a>
                 </>

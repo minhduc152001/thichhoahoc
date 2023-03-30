@@ -1,6 +1,6 @@
 import Course from "../database/models/course.model";
 import ParticipationCourse from "../database/models/participationCourse.model";
-import { IParticipationCourse } from "../types/interfaces";
+import { ICourseIdAndUserId, IParticipationCourse } from "../types/interfaces";
 
 export default class ParticipationCourseService {
   static listCourseIdsUserGot = async (userId: string) => {
@@ -15,17 +15,32 @@ export default class ParticipationCourseService {
     return participationCourse;
   };
 
-  static addParticipationCourse = async (
-    participationCourseArgs: IParticipationCourse
-  ) => {
-    const participationCourse = new ParticipationCourse(
-      participationCourseArgs
-    );
-    participationCourse.save().then(async (record) => {
+  static getCompletedLessonsInCourse = async ({
+    userId,
+    courseId,
+  }: ICourseIdAndUserId) => {
+    const completedLessons = await ParticipationCourse.findOne({
+      courseId,
+      userId,
+    });
+    return completedLessons;
+  };
+
+  static addParticipationCourse = async ({
+    courseId,
+    userId,
+  }: ICourseIdAndUserId) => {
+    const recordCounts = await ParticipationCourse.countDocuments({
+      courseId,
+      userId,
+    });
+    if (recordCounts > 0) return;
+    const participationCourse = new ParticipationCourse({ courseId, userId });
+    participationCourse.save().then(async () => {
       await Course.findByIdAndUpdate(
-        record.courseId,
+        courseId,
         {
-          $push: { students: record.userId },
+          $push: { students: userId },
         },
         { new: true }
       );
@@ -36,10 +51,32 @@ export default class ParticipationCourseService {
   static updateParticipationCourse = async (
     participationCourseArgs: IParticipationCourse
   ) => {
-    await ParticipationCourse.findOneAndUpdate(
-      { _id: participationCourseArgs._id },
-      { $set: participationCourseArgs }
-    );
+    const { newCompletedLessonId, isCompleted } = participationCourseArgs;
+    const recordCounts = await ParticipationCourse.countDocuments({
+      completedLessons: {
+        $in: [newCompletedLessonId],
+      },
+    });
+    
+    if (recordCounts === 0) {
+      const filter = {
+        userId: participationCourseArgs.userId,
+        courseId: participationCourseArgs.courseId,
+      };
+      const update: any = {};
+      if (newCompletedLessonId) {
+        update.$push = {
+          completedLessons: newCompletedLessonId,
+        };
+      }
+      if (isCompleted) {
+        update.$set = {
+          isCompleted,
+        };
+      }
+      await ParticipationCourse.findOneAndUpdate(filter, update);
+    }
+
     return await ParticipationCourse.findById(participationCourseArgs._id);
   };
 

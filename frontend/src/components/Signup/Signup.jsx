@@ -35,6 +35,28 @@ function Signup() {
       if (response.status === 200) {
         localStorage.setItem("token", response.data.signupResult.accessToken);
         localStorage.setItem("email", response.data.signupResult._doc.email);
+        localStorage.setItem("userId", response.data.signupResult._doc._id);
+        localStorage.setItem(
+          "firstName",
+          response.data.signupResult._doc.firstName
+        );
+        localStorage.setItem(
+          "lastName",
+          response.data.signupResult._doc.lastName
+        );
+        localStorage.setItem(
+          "avatar",
+          response.data.signupResult._doc.avatar
+        );
+        localStorage.setItem(
+          "subscription",
+          response.data.signupResult._doc.subscription
+        );
+        localStorage.setItem(
+          "subscriptionExpiresAt",
+          response.data.signupResult._doc.subscriptionExpiresAt
+        );
+
         toast.success("Đăng ký tài khoản thành công");
         setTimeout(() => {
           window.location.href = "/";

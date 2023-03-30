@@ -25,13 +25,28 @@ function Login() {
       if (response.status === 200) {
         localStorage.setItem("token", response.data.loginResult.accessToken);
         localStorage.setItem("email", response.data.loginResult.profile.email);
-
+        localStorage.setItem("userId", response.data.loginResult.profile._id);
         localStorage.setItem(
-          "isAdmin",
-          response.data.loginResult.profile.email === "admin@gmail.com"
-            ? "true"
-            : "false"
+          "firstName",
+          response.data.loginResult.profile.firstName
         );
+        localStorage.setItem(
+          "lastName",
+          response.data.loginResult.profile.lastName
+        );
+        localStorage.setItem(
+          "avatar",
+          response.data.loginResult.profile.avatar
+        );
+        localStorage.setItem(
+          "subscription",
+          response.data.loginResult.profile.subscription
+        );
+        localStorage.setItem(
+          "subscriptionExpiresAt",
+          response.data.loginResult.profile.subscriptionExpiresAt
+        );
+
         window.location.href = "/";
       }
     } catch (error) {

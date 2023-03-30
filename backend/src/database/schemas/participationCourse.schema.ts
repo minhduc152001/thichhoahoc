@@ -5,8 +5,8 @@ const ParticipationCourseSchema = new Schema<IParticipationCourse>(
   {
     courseId: { type: Schema.Types.ObjectId as any, ref: "Course" },
     userId: { type: Schema.Types.ObjectId as any, ref: "User" },
+    completedLessons: [{ type: Schema.Types.ObjectId as any, ref: "Lesson" }],
     isCompleted: { type: Boolean, default: false },
-    completedLessons: { type: [String], default: [] },
   },
   {
     timestamps: true,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ListCourses.scss";
 import { useSearchParams } from "react-router-dom";
 import MainTitle from "../MainTitle/MainTitle";
@@ -6,198 +6,49 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import SweetPagination from "sweetpagination";
 import numberWithCommas from "../../utils/numberWithCommas";
+import axios from "axios";
 
 function ListCourses() {
+  const { REACT_APP_BE_HOST } = process.env;
+  const userId = localStorage.getItem("userId");
+
   const [searchParams, _] = useSearchParams();
   let level = searchParams.get("level");
-  const [showFilter, setShowFilter] = useState(true);
-  const [currentPageData, setCurrentPageData] = useState([1]);
-  const courses = [
-    {
-      _id: "course1",
-      name: "Cách Lấy Gốc Hóa Đạt 9 điểm Trong 2 THÁNG | HOẠT HÌNH",
-      gradeLevel: "G10",
-      img: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/fa/6926005ea411e490ff8d4c5d4ff426/chemistry_logo.png?auto=format%2Ccompress&dpr=1",
-      description:
-        "Khi tôi lên lớp 8, tôi biết là môn hóa rất khó. Tôi cảm thấy mình học bao nhiêu cũng không vào nào là các hóa trị, cách tính số mol, phản ứng... nó làm tôi như muốn nổi khùng lên. Cũng chính vì lí do đó, về nhà tôi không làm bài tập và cũng không soạn bài trước khi đến lớp, tôi cũng chẳng chịu tìm hiểu về môn hóa. Giữa học kì 2 lớp 8, tôi trở thành học sinh mất gốc thật sự. Bạn biết không? Để được trên 6,5 môn hóa tôi phải đi học thêm, không phải để biết thêm kiến thức đâu. Nói nhỏ ở đây thôi nhé, học thêm để thầy cho biết đề trước và nâng điểm.",
-      author: "Thầy Vũ Minh Đức",
-      isFree: false,
-      completedLessons: ["lesson11", "lesson12", "lesson13"],
-      totalLessons: 4,
-      totalBuyers: 100,
-      createdAt: "2022-01-23",
-      lessons: [
-        {
-          _id: "lesson11",
-        },
-
-        {
-          _id: "lesson12",
-        },
-        {
-          _id: "lesson13",
-        },
-        {
-          _id: "lesson14",
-        },
-      ],
-    },
-
-    {
-      _id: "course2",
-      name: "Cách Lấy Gốc Hóa Đạt 9 điểm Trong 2 THÁNG | HOẠT HÌNH",
-      gradeLevel: "G10",
-      img: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/fa/6926005ea411e490ff8d4c5d4ff426/chemistry_logo.png?auto=format%2Ccompress&dpr=1",
-      description:
-        "Khi tôi lên lớp 8, tôi biết là môn hóa rất khó. Tôi cảm thấy mình học bao nhiêu cũng không vào nào là các hóa trị, cách tính số mol, phản ứng... nó làm tôi như muốn nổi khùng lên. Cũng chính vì lí do đó, về nhà tôi không làm bài tập và cũng không soạn bài trước khi đến lớp, tôi cũng chẳng chịu tìm hiểu về môn hóa. Giữa học kì 2 lớp 8, tôi trở thành học sinh mất gốc thật sự. Bạn biết không? Để được trên 6,5 môn hóa tôi phải đi học thêm, không phải để biết thêm kiến thức đâu. Nói nhỏ ở đây thôi nhé, học thêm để thầy cho biết đề trước và nâng điểm.",
-      author: "Thầy Phạm Xuân Lâm",
-      isFree: true,
-      completedLessons: ["lesson21"],
-      totalLessons: 4,
-      totalBuyers: 2349834,
-      createdAt: "2022-01-23",
-      lessons: [
-        {
-          _id: "lesson21",
-        },
-
-        {
-          _id: "lesson22",
-        },
-        {
-          _id: "lesson23",
-        },
-        {
-          _id: "lesson24",
-        },
-      ],
-    },
-
-    {
-      _id: "course3",
-      name: "Cách Lấy Gốc Hóa Đạt 9 điểm Trong 2 THÁNG | HOẠT HÌNH",
-      gradeLevel: "G10",
-      img: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/fa/6926005ea411e490ff8d4c5d4ff426/chemistry_logo.png?auto=format%2Ccompress&dpr=1",
-      description:
-        "Khi tôi lên lớp 8, tôi biết là môn hóa rất khó. Tôi cảm thấy mình học bao nhiêu cũng không vào nào là các hóa trị, cách tính số mol, phản ứng... nó làm tôi như muốn nổi khùng lên. Cũng chính vì lí do đó, về nhà tôi không làm bài tập và cũng không soạn bài trước khi đến lớp, tôi cũng chẳng chịu tìm hiểu về môn hóa. Giữa học kì 2 lớp 8, tôi trở thành học sinh mất gốc thật sự. Bạn biết không? Để được trên 6,5 môn hóa tôi phải đi học thêm, không phải để biết thêm kiến thức đâu. Nói nhỏ ở đây thôi nhé, học thêm để thầy cho biết đề trước và nâng điểm.",
-      author: "Cô Tống Thị Minh Ngọc",
-      isFree: false,
-      completedLessons: ["lesson31", "lesson32"],
-      totalLessons: 4,
-      totalBuyers: 43998,
-      createdAt: "2022-01-23",
-      lessons: [
-        {
-          _id: "lesson31",
-        },
-
-        {
-          _id: "lesson32",
-        },
-        {
-          _id: "lesson33",
-        },
-        {
-          _id: "lesson34",
-        },
-      ],
-    },
-
-    {
-      _id: "course4",
-      name: "Cách Lấy Gốc Hóa Đạt 9 điểm Trong 2 THÁNG | HOẠT HÌNH",
-      gradeLevel: "G10",
-      img: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/fa/6926005ea411e490ff8d4c5d4ff426/chemistry_logo.png?auto=format%2Ccompress&dpr=1",
-      description:
-        "Khi tôi lên lớp 8, tôi biết là môn hóa rất khó. Tôi cảm thấy mình học bao nhiêu cũng không vào nào là các hóa trị, cách tính số mol, phản ứng... nó làm tôi như muốn nổi khùng lên. Cũng chính vì lí do đó, về nhà tôi không làm bài tập và cũng không soạn bài trước khi đến lớp, tôi cũng chẳng chịu tìm hiểu về môn hóa. Giữa học kì 2 lớp 8, tôi trở thành học sinh mất gốc thật sự. Bạn biết không? Để được trên 6,5 môn hóa tôi phải đi học thêm, không phải để biết thêm kiến thức đâu. Nói nhỏ ở đây thôi nhé, học thêm để thầy cho biết đề trước và nâng điểm.",
-      author: "Cô Nguyễn Thị A",
-      isFree: true,
-      completedLessons: ["lesson41", "lesson42", "lesson43", "lesson44"],
-      totalLessons: 4,
-      totalBuyers: 100,
-      createdAt: "2022-01-23",
-      lessons: [
-        {
-          _id: "lesson41",
-        },
-
-        {
-          _id: "lesson42",
-        },
-        {
-          _id: "lesson43",
-        },
-        {
-          _id: "lesson44",
-        },
-      ],
-    },
-
-    {
-      _id: "course5",
-      name: "Cách Lấy Gốc Hóa Đạt 9 điểm Trong 2 THÁNG | HOẠT HÌNH",
-      gradeLevel: "G10",
-      img: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/fa/6926005ea411e490ff8d4c5d4ff426/chemistry_logo.png?auto=format%2Ccompress&dpr=1",
-      description:
-        "Khi tôi lên lớp 8, tôi biết là môn hóa rất khó. Tôi cảm thấy mình học bao nhiêu cũng không vào nào là các hóa trị, cách tính số mol, phản ứng... nó làm tôi như muốn nổi khùng lên. Cũng chính vì lí do đó, về nhà tôi không làm bài tập và cũng không soạn bài trước khi đến lớp, tôi cũng chẳng chịu tìm hiểu về môn hóa. Giữa học kì 2 lớp 8, tôi trở thành học sinh mất gốc thật sự. Bạn biết không? Để được trên 6,5 môn hóa tôi phải đi học thêm, không phải để biết thêm kiến thức đâu. Nói nhỏ ở đây thôi nhé, học thêm để thầy cho biết đề trước và nâng điểm.",
-      author: "Thầy Vũ Minh Đức",
-      isFree: true,
-      completedLessons: [],
-      totalLessons: 4,
-      totalBuyers: 1043,
-      createdAt: "2022-01-23",
-      lessons: [
-        {
-          _id: "lesson51",
-        },
-
-        {
-          _id: "lesson52",
-        },
-        {
-          _id: "lesson53",
-        },
-        {
-          _id: "lesson54",
-        },
-      ],
-    },
-
-    {
-      _id: "course6",
-      name: "Cách Lấy Gốc Hóa Đạt 9 điểm Trong 2 THÁNG | HOẠT HÌNH",
-      gradeLevel: "G10",
-      img: "https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/fa/6926005ea411e490ff8d4c5d4ff426/chemistry_logo.png?auto=format%2Ccompress&dpr=1",
-      description:
-        "Khi tôi lên lớp 8, tôi biết là môn hóa rất khó. Tôi cảm thấy mình học bao nhiêu cũng không vào nào là các hóa trị, cách tính số mol, phản ứng... nó làm tôi như muốn nổi khùng lên. Cũng chính vì lí do đó, về nhà tôi không làm bài tập và cũng không soạn bài trước khi đến lớp, tôi cũng chẳng chịu tìm hiểu về môn hóa. Giữa học kì 2 lớp 8, tôi trở thành học sinh mất gốc thật sự. Bạn biết không? Để được trên 6,5 môn hóa tôi phải đi học thêm, không phải để biết thêm kiến thức đâu. Nói nhỏ ở đây thôi nhé, học thêm để thầy cho biết đề trước và nâng điểm.",
-      author: "Thầy Vũ Minh Đức",
-      isFree: false,
-      completedLessons: [],
-      totalLessons: 3,
-      totalBuyers: 49300,
-      createdAt: "2022-01-23",
-      lessons: [
-        {
-          _id: "lesson61",
-        },
-
-        {
-          _id: "lesson62",
-        },
-        {
-          _id: "lesson63",
-        },
-      ],
-    },
-  ];
   const levelMap = {
-    "lop-10": "lớp 10",
-    "lop-11": "lớp 11",
-    "lop-12": "lớp 12",
-    "on-thi-dai-hoc": "ôn thi đại học",
+    "lop-10": ["lớp 10", "G10"],
+    "lop-11": ["lớp 11", "G11"],
+    "lop-12": ["lớp 12", "G12"],
+    "on-thi-dai-hoc": ["ôn thi đại học", "collegePrep"],
   };
 
-  const pageTitle = levelMap[level];
+  const [showFilter, setShowFilter] = useState(true);
+  const [data, setData] = useState([]);
+  const [coursesAndCompletion, setCoursesAndCompletion] = useState([]);
+  const [currentGradeLevel, setCurrentGradeLevel] = useState(
+    levelMap[level][1]
+  );
+
+  const fetchData = async () => {
+    const { data } = await axios.get(
+      `${REACT_APP_BE_HOST}/api/courses-and-completion/${userId}`
+    );
+    setCoursesAndCompletion(
+      data.coursesAndCompletion?.filter(
+        (el) => el.course.gradeLevel === currentGradeLevel
+      )
+    );
+    setData(data.coursesAndCompletion);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const [currentPageData, setCurrentPageData] = useState(
+    new Array(coursesAndCompletion.length).fill()
+  );
+
+  const pageTitle = levelMap[level][0];
 
   const formatTextAction = (percentage) => {
     return percentage <= 0
@@ -207,11 +58,78 @@ function ListCourses() {
       : "Đã học";
   };
 
-  const getTheNextLessonIndex = (course) => {
-    if (course.completedLessons.length / course.totalLessons === 0) return 0;
-    if (course.completedLessons.length / course.totalLessons < 1)
-      return course.completedLessons.length;
-    return course.completedLessons.length - 1;
+  const getTheNextLessonIndex = ({ course, completedLessons }) => {
+    if (completedLessons?.length / course.lessons?.length === 0) return 0;
+    if (completedLessons?.length / course.lessons?.length < 1)
+      return completedLessons?.length;
+    return completedLessons?.length - 1;
+  };
+
+  const filterCoursesByGrade = (gradeLevel) => {
+    setCurrentGradeLevel(gradeLevel);
+    setCoursesAndCompletion(data);
+    const tempVar = data?.filter((el) => el.course.gradeLevel === gradeLevel);
+    setCoursesAndCompletion(tempVar);
+  };
+
+  const filterFreeOrPaidCourses = (isFree) => {
+    setCoursesAndCompletion(
+      data.filter((el) => el.course.gradeLevel === currentGradeLevel)
+    );
+    setCoursesAndCompletion((prev) =>
+      prev.filter((el) => el.course.isFree === isFree)
+    );
+  };
+
+  const removeFreeOrPaidFilter = () => {
+    setCoursesAndCompletion(
+      data.filter((el) => el.course.gradeLevel === currentGradeLevel)
+    );
+  };
+
+  const sortMostLearners = () => {
+    setCoursesAndCompletion(
+      data.filter((el) => el.course.gradeLevel === currentGradeLevel)
+    );
+    setCoursesAndCompletion((prev) =>
+      prev.sort((a, b) => b.course.lessons.length - a.course.lessons.length)
+    );
+  };
+
+  const sortNewestCourses = () => {
+    setCoursesAndCompletion(
+      data.filter((el) => el.course.gradeLevel === currentGradeLevel)
+    );
+    setCoursesAndCompletion(
+      data.filter((el) => el.course.gradeLevel === currentGradeLevel)
+    );
+  };
+
+  const sortJoinedCourses = () => {
+    setCoursesAndCompletion(
+      data.filter((el) => el.course.gradeLevel === currentGradeLevel)
+    );
+    setCoursesAndCompletion((prev) =>
+      prev.filter((el) => el.course.students.includes(userId))
+    );
+  };
+
+  const sortUnjoinedCourses = () => {
+    setCoursesAndCompletion(
+      data.filter((el) => el.course.gradeLevel === currentGradeLevel)
+    );
+    setCoursesAndCompletion((prev) =>
+      prev.filter((el) => !el.course.students.includes(userId))
+    );
+  };
+
+  const handleClickCourse = async ({ course, completedLessons }) => {
+    await axios.post(
+      `${REACT_APP_BE_HOST}/api/participation/${course._id}/${userId}`
+    );
+    window.location.href = `/hoc/${course._id}/bai-hoc/${
+      course.lessons[getTheNextLessonIndex({ completedLessons, course })]._id
+    }`;
   };
 
   return (
@@ -227,11 +145,22 @@ function ListCourses() {
         </button>
         <div className="sort-select">
           <div>
-            <select class="form-select" aria-label=".form-select-lg example">
-              <option selected value="most-learners">
-                Nhiều người học nhất
-              </option>
+            <select
+              defaultValue="newest"
+              onChange={(e) => {
+                const sort = e.target.value;
+                console.log(sort);
+
+                if (sort === "most-learners") sortMostLearners();
+                if (sort === "joined") sortJoinedCourses();
+                if (sort === "not-join") sortUnjoinedCourses();
+                if (sort === "newest") sortNewestCourses();
+              }}
+              class="form-select"
+              aria-label=".form-select-lg example"
+            >
               <option value="newest">Mới nhất</option>
+              <option value="most-learners">Nhiều người học nhất</option>
               <option value="joined">Đã tham gia</option>
               <option value="not-join">Chưa tham gia</option>
             </select>
@@ -250,6 +179,8 @@ function ListCourses() {
                   type="radio"
                   name="level"
                   id="level-10"
+                  checked={currentGradeLevel === "G10"}
+                  onChange={() => filterCoursesByGrade("G10")}
                 />
                 <label class="form-check-label" for="level-10">
                   Lớp 10
@@ -261,6 +192,8 @@ function ListCourses() {
                   type="radio"
                   name="level"
                   id="level-11"
+                  checked={currentGradeLevel === "G11"}
+                  onChange={() => filterCoursesByGrade("G11")}
                 />
                 <label class="form-check-label" for="level-11">
                   Lớp 11
@@ -272,6 +205,8 @@ function ListCourses() {
                   type="radio"
                   name="level"
                   id="level-12"
+                  checked={currentGradeLevel === "G12"}
+                  onChange={() => filterCoursesByGrade("G12")}
                 />
                 <label class="form-check-label" for="level-12">
                   Lớp 12
@@ -283,6 +218,8 @@ function ListCourses() {
                   type="radio"
                   name="level"
                   id="on-thi-dai-hoc"
+                  checked={currentGradeLevel === "collegePrep"}
+                  onChange={() => filterCoursesByGrade("collegePrep")}
                 />
                 <label class="form-check-label" for="on-thi-dai-hoc">
                   Ôn thi đại học
@@ -298,6 +235,7 @@ function ListCourses() {
                   type="radio"
                   name="type"
                   id="paid"
+                  onChange={() => filterFreeOrPaidCourses(false)}
                 />
                 <label class="form-check-label" for="paid">
                   Mất phí
@@ -309,6 +247,7 @@ function ListCourses() {
                   type="radio"
                   name="type"
                   id="free"
+                  onChange={() => filterFreeOrPaidCourses(true)}
                 />
                 <label class="form-check-label" for="free">
                   Miễn phí
@@ -320,6 +259,8 @@ function ListCourses() {
                   type="radio"
                   name="type"
                   id="all"
+                  checked
+                  onChange={removeFreeOrPaidFilter}
                 />
                 <label class="form-check-label" for="all">
                   Tất cả
@@ -329,7 +270,7 @@ function ListCourses() {
           </div>
         )}
         <div className="list-courses">
-          {courses.map((course) => (
+          {currentPageData?.map(({ course, completedLessons }) => (
             <div className="course">
               <div className="img-course">
                 <img src={course.img} alt="" height={140} width={260} />
@@ -342,8 +283,8 @@ function ListCourses() {
                 </div>
                 <div className="desc-course">{course.description}</div>
                 <div className="stat">
-                  {course.totalLessons} bài học -{" "}
-                  {numberWithCommas(course.totalBuyers)} người tham gia
+                  {course.lessons?.length} bài học -{" "}
+                  {numberWithCommas(course.students?.length)} người tham gia
                 </div>
                 <div className="author">{course.author}</div>
               </div>
@@ -352,38 +293,35 @@ function ListCourses() {
                 <button
                   type="button"
                   onClick={() =>
-                    (window.location.href = `/hoc/${course._id}/bai-hoc/${
-                      course.lessons[getTheNextLessonIndex(course)]._id
-                    }`)
+                    handleClickCourse({ course, completedLessons })
                   }
                   class={`btn btn-${
-                    course.completedLessons.length / course.totalLessons <= 0
+                    completedLessons?.length / course.lessons?.length <= 0
                       ? "primary"
-                      : course.completedLessons.length / course.totalLessons < 1
+                      : completedLessons?.length / course.lessons?.length < 1
                       ? "outline-primary"
                       : "success"
                   }`}
                 >
                   {formatTextAction(
                     Math.floor(
-                      (course.completedLessons.length / course.totalLessons) *
-                        100
+                      (completedLessons?.length / course.lessons?.length) * 100
                     )
                   )}
                 </button>
-                {course.completedLessons.length / course.totalLessons > 0 && (
+                {completedLessons?.length / course.lessons?.length > 0 && (
                   <div className="progress-circle">
                     <CircularProgressbar
                       value={Math.floor(
-                        (course.completedLessons.length / course.totalLessons) *
+                        (completedLessons?.length / course.lessons?.length) *
                           100
                       )}
                       text={`${Math.floor(
-                        (course.completedLessons.length / course.totalLessons) *
+                        (completedLessons?.length / course.lessons?.length) *
                           100
                       )}%`}
                       styles={buildStyles(
-                        course.completedLessons.length / course.totalLessons < 1
+                        completedLessons?.length / course.lessons?.length < 1
                           ? {
                               textColor: "#0d6efd",
                               pathColor: "#0d6efd",
@@ -405,8 +343,8 @@ function ListCourses() {
       <div className="pagination">
         <SweetPagination
           currentPageData={setCurrentPageData}
-          dataPerPage={2}
-          getData={courses}
+          dataPerPage={6}
+          getData={coursesAndCompletion}
           navigation={true}
           getStyle={"style-custom"}
         />

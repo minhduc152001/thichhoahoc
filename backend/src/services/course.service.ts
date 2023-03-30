@@ -9,6 +9,26 @@ export default class CourseService {
     return courses;
   };
 
+  static getCoursesAndCompletion = async (userId: string) => {
+    const courses = await Course.find().populate("lessons").exec();
+    const completion = await Promise.all(
+      courses
+        .filter((course) => (course.lessons as any)?.length > 0)
+        .map(async (course) => {
+          return {
+            course,
+            completedLessons: (
+              await ParticipationCourse.findOne({
+                userId,
+                courseId: course._id,
+              }).select("completedLessons")
+            )?.completedLessons,
+          };
+        })
+    );
+    return completion;
+  };
+
   static listCoursesByGrade = async (gradeLevel: EGradeLevel) => {
     const courses = await Course.find({ gradeLevel });
     return courses;

@@ -147,6 +147,7 @@ export default class UserService {
         firstName: user.firstName,
         lastName: user.lastName,
         subscription: user.subscription,
+        avatar: user.avatar,
         subscriptionExpiresAt: user.subscriptionExpiresAt,
         isEmailVerified: user.isEmailVerified,
       },
