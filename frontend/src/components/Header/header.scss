@@ -119,9 +119,9 @@
 .avatar {
   min-width: 46px;
   height: 46px;
-  // overflow: hidden;
-  border-radius: 50%;
+  cursor: pointer;
   img {
+    border-radius: 50%;
     width: 46px;
     height: 46px;
     object-fit: contain;
@@ -150,3 +150,119 @@
     }
   }
 }
+
+.container-profile-setting {
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+  height: 1023px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+
+  .profile-container {
+    width: 500px;
+    height: 616px;
+    background: #ffffff;
+    box-shadow: 0px 3px 6px -3px rgba(23, 24, 24, 0.08),
+      0px 8px 20px -4px rgba(23, 24, 24, 0.12);
+    border-radius: 8px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 40%;
+    left: 50%;
+    animation: show 0.4s ease-in-out;
+
+    .profile-header {
+      width: 100%;
+      height: 62px;
+      border-bottom: 1px solid #c9ccd0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 17px;
+    }
+
+    .profile-setting {
+      width: 100%;
+      height: auto;
+      padding: 0px 20px 0px 20px;
+      overflow-x: visible;
+
+      .profile-setting-item {
+        height: 60px;
+        margin: 12px;
+
+        .profile-element {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-bottom: 8px;
+          border-bottom: 1px solid #a3a3a3;
+
+          img {
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+          }
+
+          img:hover {
+            cursor: pointer;
+          }
+
+          .email {
+            float: right;
+          }
+        }
+
+        .profile-input-element {
+          align-items: center;
+          padding-bottom: 8px;
+          border-bottom: 1px solid #a3a3a3;
+          display: flex;
+          justify-content: space-between;
+          gap: 20px;
+
+          .btn-save-changes {
+            margin-top: 20px;
+            color: #3498db;
+            cursor: pointer;
+          }
+
+          .input-box {
+            width: 66%;
+
+            .btn-profile-signout {
+              display: flex;
+              justify-content: flex-start;
+              gap: 10px;
+              cursor: pointer;
+            }
+          }
+
+          .title-element {
+            display: flex;
+            justify-content: flex-start;
+          }
+
+          input {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.title-element {
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  justify-content: end;
+}
+.main-content-element {
+  font-size: 16px;
+  color: black;
+}
+

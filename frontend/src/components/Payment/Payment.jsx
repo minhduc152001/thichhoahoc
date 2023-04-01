@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import "./Payment.scss";
+import axios from "axios";
+import { user } from "../../constants/profileUser";
 
-const colors = {
-  blue: "#4285f4",
-  gray: "rgba(0,0,0,.2)",
-};
+const priceIds = [
+  "price_1MrexDKZ5Ry91xh9kQAwQzOH",
+  "price_1Mrf0mKZ5Ry91xh90f2CiQW0",
+  "price_1Mrf8OKZ5Ry91xh9IdfMtPOP",
+];
 
 const plans = [
   {
@@ -33,10 +36,22 @@ function Payment() {
   // const [bgColorForSelectedPlan, setBgColorForSelectedPlan] = useState(
   //   bgColors.blue
   // );
+  const { REACT_APP_BE_HOST } = process.env;
   const [currentPlan, setCurrentPlan] = useState(3);
 
   const handleSelectPlan = (noPlan) => {
     setCurrentPlan(noPlan);
+  };
+
+  const handleCreateCheckout = async (priceId) => {
+    const { data } = await axios.post(
+      `${REACT_APP_BE_HOST}/create-checkout-session`,
+      {
+        priceId,
+        userId: user.userId,
+      }
+    );
+    window.location.href = data.checkoutUrl;
   };
 
   return (
@@ -169,7 +184,12 @@ function Payment() {
       </div>
 
       <div className="submit-container">
-        <div className="payment-button">Thanh toán</div>
+        <div
+          className="payment-button"
+          onClick={() => handleCreateCheckout(priceIds[currentPlan - 1])}
+        >
+          Thanh toán
+        </div>
       </div>
     </div>
   );

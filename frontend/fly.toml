@@ -6,6 +6,9 @@ kill_timeout = 5
 processes = []
 
 [env]
+  REACT_APP_BE_HOST = "https://chemx-staging.fly.dev"
+  REACT_APP_BUCKET_URL = "gs://thesis-7edb1.appspot.com"
+  REACT_APP_STRIPE_PUBLISHABLE_KEY = "pk_test_51MremvKZ5Ry91xh96OS7EppigE1rRKqGIlSDyVXfhAk6MrPs5Hd01T7GYnxaEBXzu9CAQ88LESuxemCmvRnOoUqR004zo4aoeh"
 
 [experimental]
   auto_rollback = true

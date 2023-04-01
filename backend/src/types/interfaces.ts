@@ -1,6 +1,8 @@
 import {
   ECorrectAnswer,
   EGradeLevel,
+  EPaymentStatus,
+  EStripePriceIds,
   ESubscription,
 } from "../constants/enumTypes";
 
@@ -183,4 +185,13 @@ export interface ITestHistory {
   highestScore: number;
   doneTime: number;
   createdAt: Date;
+}
+
+export interface IPayment {
+  _id?: string;
+  userId?: string;
+  customerId?: string;
+  priceId?: any;
+  status?: any;
+  createdAt?: Date;
 }

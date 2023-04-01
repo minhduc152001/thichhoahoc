@@ -7,6 +7,7 @@ import riddleRoutes from "./riddle.routes";
 import documentRoutes from "./document.routes";
 import testRoutes from "./test.routes";
 import partipationCourseRoutes from "./partipationCourse.routes";
+import checkoutRoutes from "./checkout.routes";
 
 export default (app: Application) => {
   healthRoutes(app);
@@ -17,4 +18,5 @@ export default (app: Application) => {
   documentRoutes(app);
   testRoutes(app);
   partipationCourseRoutes(app);
+  checkoutRoutes(app);
 };

@@ -18,3 +18,15 @@ export enum ECorrectAnswer {
   C = "C",
   D = "D",
 }
+
+export enum EPaymentStatus {
+  Success = "success",
+  Failed = "failed",
+  Pending = "pending",
+}
+
+export enum EStripePriceIds {
+  Monthly = "price_1MrexDKZ5Ry91xh9kQAwQzOH",
+  Annually = "price_1Mrf0mKZ5Ry91xh90f2CiQW0",
+  Unlimited = "price_1Mrf8OKZ5Ry91xh9IdfMtPOP",
+}

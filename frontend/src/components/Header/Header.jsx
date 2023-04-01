@@ -1,17 +1,55 @@
 import React, { useState } from "react";
 import "./header.scss";
 import Button from "react-bootstrap/Button";
+import ClearIcon from "@mui/icons-material/Clear";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import { updateProfileUser, user } from "../../constants/profileUser";
+import axios from "axios";
+import { toast } from "react-toastify";
 // import { ParentProvider } from "../../store/Provider";
 
 function Header() {
+  const { REACT_APP_BE_HOST } = process.env;
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("token") !== null
   );
   // const useStore = useContext(ParentProvider);
+  const [activeModal, setActiveModal] = useState(false);
+  const [avatarImg, setAvatarImg] = useState(user.avatar);
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [subscription, setSubscription] = useState(user.subscription);
+
+  const formatDateInVN = () => {
+    const date = new Date(user.subscriptionExpiresAt)
+      ?.toLocaleDateString("vi-VN")
+      .split("/");
+    return `Kết thúc ngày ${date[0]} tháng ${date[1]} năm ${date[2]}`;
+  };
 
   const handleLogout = () => {
     localStorage.clear();
     setIsLoggedIn(false);
+    window.location.href = "/";
+  };
+
+  const updateProfile = async () => {
+    toast.success("Cập nhật tài khoản thành công");
+    await axios.put(`${REACT_APP_BE_HOST}/api/user/${user.userId}`, {
+      firstName,
+      lastName,
+      avatar: avatarImg,
+      subscription,
+    });
+    updateProfileUser({ firstName, lastName, avatar: avatarImg });
+  };
+
+  const handleShowModal = () => {
+    setActiveModal(true);
+  };
+
+  const handleHideModal = () => {
+    setActiveModal(false);
   };
 
   return (
@@ -236,20 +274,195 @@ function Header() {
                       Đăng xuất
                     </Button>
                   </a>
-                  <a href="/profile">
+                  <div onClick={handleShowModal}>
                     <div className="avatar">
-                      <img
-                        src={localStorage.getItem("avatar")}
-                        alt="Ảnh mặc định"
-                      />
+                      <img src={user.avatar} alt="Ảnh" />
                     </div>
-                  </a>
+                  </div>
                 </>
               )}
             </div>
           </div>
         </nav>
       </div>
+      {activeModal && (
+        <div className="container-profile-setting">
+          <div className="profile-container">
+            <div className="profile-header">
+              <div class="profile-header">
+                <span>Thông tin tài khoản</span>
+                <div onClick={handleHideModal} style={{ cursor: "pointer" }}>
+                  <ClearIcon />
+                </div>
+              </div>
+            </div>
+            <div className="profile-setting">
+              <div className="profile-setting-item">
+                <div className="profile-element">
+                  <img src={avatarImg} alt="Avatar" className="profile-avtar" />
+                  <div className="email">
+                    <div className="title-element">Email</div>
+                    <div className="main-content-element">{user.email}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className="profile-setting-item"
+                style={{ paddingTop: "22px" }}
+              >
+                <div className="profile-input-element">
+                  <div className="input-box">
+                    <div
+                      className="title-element"
+                      style={{ marginBottom: "8px" }}
+                    >
+                      Tên
+                    </div>
+                    <input
+                      type="text"
+                      defaultValue={lastName}
+                      style={{
+                        height: "40px",
+                        padding: "10px",
+                        marginBottom: "6px",
+                        borderRadius: "7px",
+                        border: "1px solid #b1b1b1",
+                      }}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </div>
+                  <div
+                    className="btn-save-changes"
+                    {...(lastName === user.lastName && {
+                      style: { opacity: 0.3, cursor: "default" },
+                    })}
+                    onClick={updateProfile}
+                  >
+                    Lưu thay đổi
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className="profile-setting-item"
+                style={{ paddingTop: "22px" }}
+              >
+                <div className="profile-input-element">
+                  <div className="input-box">
+                    <div
+                      className="title-element"
+                      style={{ marginBottom: "12px", marginTop: "26px" }}
+                    >
+                      Họ & tên đệm
+                    </div>
+                    <input
+                      type="text"
+                      defaultValue={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      style={{
+                        height: "40px",
+                        padding: "10px",
+                        marginBottom: "6px",
+                        borderRadius: "7px",
+                        border: "1px solid #b1b1b1",
+                      }}
+                    />
+                  </div>
+                  <div
+                    className="btn-save-changes"
+                    style={{ marginTop: "46px" }}
+                    {...(firstName === user.firstName && {
+                      style: { opacity: 0.3, cursor: "default" },
+                    })}
+                    onClick={updateProfile}
+                  >
+                    Lưu thay đổi
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className="profile-setting-item"
+                style={{ paddingTop: "22px" }}
+              >
+                <div className="profile-input-element">
+                  <div className="input-box">
+                    <div
+                      className="title-element"
+                      style={{ marginBottom: "11px", marginTop: "59px" }}
+                    >
+                      Loại thành viên
+                    </div>
+                    <div
+                      className="profile-subscription"
+                      {...(user.subscription !== "NORMAL" && {
+                        style: { color: "#f36223" },
+                      })}
+                    >
+                      {user.subscription}
+                    </div>
+                  </div>
+                  <div
+                    className="btn-save-changes"
+                    style={{ marginTop: "82px" }}
+                  >
+                    {user.subscription === "UNLIMITED" ? "" : "Nâng cấp"}
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className="profile-setting-item"
+                style={{ paddingTop: "22px" }}
+              >
+                <div className="profile-input-element">
+                  <div className="input-box">
+                    <div
+                      className="title-element"
+                      style={{ marginBottom: "8px", marginTop: "68px" }}
+                    >
+                      Thời gian hết hạn
+                    </div>
+                    <div className="profile-subscription-expire">
+                      {formatDateInVN()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className="profile-setting-item"
+                style={{ paddingTop: "22px" }}
+              >
+                <div
+                  className="profile-input-element"
+                  style={{ border: "none" }}
+                >
+                  <div className="input-box">
+                    <div
+                      className="title-element"
+                      style={{ marginBottom: "8px", marginTop: "73px" }}
+                    >
+                      Tài khoản
+                    </div>
+                    <div className="btn-profile-signout">
+                      <ExitToAppIcon color="error" />
+                      <div
+                        onClick={handleLogout}
+                        className="signout-txt"
+                        style={{ color: "#d32f2f" }}
+                      >
+                        Đăng xuất
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
