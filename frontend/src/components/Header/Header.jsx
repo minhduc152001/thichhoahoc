@@ -21,6 +21,8 @@ function Header() {
   const [subscription, setSubscription] = useState(user.subscription);
 
   const formatDateInVN = () => {
+    if (user.subscriptionExpiresAt === 'null') return "Vô thời hạn";
+
     const date = new Date(user.subscriptionExpiresAt)
       ?.toLocaleDateString("vi-VN")
       .split("/");

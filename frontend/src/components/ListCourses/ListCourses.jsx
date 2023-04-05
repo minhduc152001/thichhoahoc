@@ -7,6 +7,9 @@ import "react-circular-progressbar/dist/styles.css";
 import SweetPagination from "sweetpagination";
 import numberWithCommas from "../../utils/numberWithCommas";
 import axios from "axios";
+import { user } from "../../constants/profileUser";
+import { paidToast } from "../../utils/toastInfo";
+import NeedLogin from "../NeedLogin/NeedLogin";
 
 function ListCourses() {
   const { REACT_APP_BE_HOST } = process.env;
@@ -124,12 +127,16 @@ function ListCourses() {
   };
 
   const handleClickCourse = async ({ course, completedLessons }) => {
-    await axios.post(
-      `${REACT_APP_BE_HOST}/api/participation/${course._id}/${userId}`
-    );
-    window.location.href = `/hoc/${course._id}/bai-hoc/${
-      course.lessons[getTheNextLessonIndex({ completedLessons, course })]._id
-    }`;
+    if (course.isFree || user.subscription !== "NORMAL") {
+      await axios.post(
+        `${REACT_APP_BE_HOST}/api/participation/${course._id}/${userId}`
+      );
+      window.location.href = `/hoc/${course._id}/bai-hoc/${
+        course.lessons[getTheNextLessonIndex({ completedLessons, course })]._id
+      }`;
+    } else {
+      paidToast();
+    }
   };
 
   return (
@@ -269,75 +276,80 @@ function ListCourses() {
             </div>
           </div>
         )}
-        <div className="list-courses">
-          {currentPageData?.map(({ course, completedLessons }) => (
-            <div className="course">
-              <div className="img-course">
-                <img src={course.img} alt="" height={140} width={260} />
-              </div>
-
-              <div className="detail-course">
-                <div className="title-course">
-                  {course.isFree && <span>Free</span>}
-                  {course.name}
+        {userId ? (
+          <div className="list-courses">
+            {currentPageData?.map(({ course, completedLessons }) => (
+              <div className="course">
+                <div className="img-course">
+                  <img src={course.img} alt="" height={140} width={260} />
                 </div>
-                <div className="desc-course">{course.description}</div>
-                <div className="stat">
-                  {course.lessons?.length} bài học -{" "}
-                  {numberWithCommas(course.students?.length)} người tham gia
-                </div>
-                <div className="author">{course.author}</div>
-              </div>
 
-              <div className="course-action">
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleClickCourse({ course, completedLessons })
-                  }
-                  class={`btn btn-${
-                    completedLessons?.length / course.lessons?.length <= 0
-                      ? "primary"
-                      : completedLessons?.length / course.lessons?.length < 1
-                      ? "outline-primary"
-                      : "success"
-                  }`}
-                >
-                  {formatTextAction(
-                    Math.floor(
-                      (completedLessons?.length / course.lessons?.length) * 100
-                    )
-                  )}
-                </button>
-                {completedLessons?.length / course.lessons?.length > 0 && (
-                  <div className="progress-circle">
-                    <CircularProgressbar
-                      value={Math.floor(
-                        (completedLessons?.length / course.lessons?.length) *
-                          100
-                      )}
-                      text={`${Math.floor(
-                        (completedLessons?.length / course.lessons?.length) *
-                          100
-                      )}%`}
-                      styles={buildStyles(
-                        completedLessons?.length / course.lessons?.length < 1
-                          ? {
-                              textColor: "#0d6efd",
-                              pathColor: "#0d6efd",
-                            }
-                          : {
-                              textColor: "rgb(40, 167, 69)",
-                              pathColor: "rgb(40, 167, 69)",
-                            }
-                      )}
-                    />
+                <div className="detail-course">
+                  <div className="title-course">
+                    {course.isFree && <span>Free</span>}
+                    {course.name}
                   </div>
-                )}
+                  <div className="desc-course">{course.description}</div>
+                  <div className="stat">
+                    {course.lessons?.length} bài học -{" "}
+                    {numberWithCommas(course.students?.length)} người tham gia
+                  </div>
+                  <div className="author">{course.author}</div>
+                </div>
+
+                <div className="course-action">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleClickCourse({ course, completedLessons })
+                    }
+                    class={`btn btn-${
+                      completedLessons?.length / course.lessons?.length <= 0
+                        ? "primary"
+                        : completedLessons?.length / course.lessons?.length < 1
+                        ? "outline-primary"
+                        : "success"
+                    }`}
+                  >
+                    {formatTextAction(
+                      Math.floor(
+                        (completedLessons?.length / course.lessons?.length) *
+                          100
+                      )
+                    )}
+                  </button>
+                  {completedLessons?.length / course.lessons?.length > 0 && (
+                    <div className="progress-circle">
+                      <CircularProgressbar
+                        value={Math.floor(
+                          (completedLessons?.length / course.lessons?.length) *
+                            100
+                        )}
+                        text={`${Math.floor(
+                          (completedLessons?.length / course.lessons?.length) *
+                            100
+                        )}%`}
+                        styles={buildStyles(
+                          completedLessons?.length / course.lessons?.length < 1
+                            ? {
+                                textColor: "#0d6efd",
+                                pathColor: "#0d6efd",
+                              }
+                            : {
+                                textColor: "rgb(40, 167, 69)",
+                                pathColor: "rgb(40, 167, 69)",
+                              }
+                        )}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <NeedLogin />
+        )}
       </div>
 
       <div className="pagination">

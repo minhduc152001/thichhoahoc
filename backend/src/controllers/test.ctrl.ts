@@ -11,6 +11,17 @@ export default class TestCtrl {
     }
   };
 
+  static listTestsWithUserHistory = async (req: Request, res: Response) => {
+    try {
+      const testsAndHistory = await TestService.listTestsWithUserHistory(
+        req.params.userId
+      );
+      return res.status(200).json({ testsAndHistory });
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  };
+
   static addTest = async (req: Request, res: Response) => {
     try {
       const data = req.body;

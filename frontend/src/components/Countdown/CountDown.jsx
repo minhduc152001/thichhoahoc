@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-function Countdown({ minutes, handleSubmit, showAnswer }) {
-  const [time, setTime] = useState({
-    hours: "00",
-    minutes: "00",
-    seconds: "00",
-  });
-
+function Countdown({
+  minutes,
+  handleSubmit,
+  showAnswer,
+  time,
+  setTime,
+  isEnded,
+}) {
   useEffect(() => {
     let seconds = minutes * 60;
     const timer = setInterval(() => {
@@ -17,7 +18,7 @@ function Countdown({ minutes, handleSubmit, showAnswer }) {
         .toString()
         .padStart(2, "0");
       const secondsDisplay = (seconds % 60).toString().padStart(2, "0");
-      setTime({ hours, minutes: minutesDisplay, seconds: secondsDisplay });
+      !isEnded && setTime({ hours, minutes: minutesDisplay, seconds: secondsDisplay });
       seconds--;
       if (seconds < 0) {
         clearInterval(timer);

@@ -33,12 +33,12 @@ export default function AnswerShow({ question, showAnswer }) {
       {showAnswer && (
         <FormControlLabel
           control={<Switch checked={checked} onChange={handleChange} />}
-          label="Show"
+          label="Xem lời giải"
         />
       )}
       {checked && (
         <div className="answer-show">
-          <div className="correct-choice">Đáp án đúng: {question.answer}</div>
+          <div className="correct-choice">Đáp án đúng: {question.correctAnswer}</div>
           <div className="explaination-answer">
             <span>Giải thích:</span>
             <p>{question.explaination}</p>

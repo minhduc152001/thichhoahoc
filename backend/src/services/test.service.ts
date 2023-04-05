@@ -1,5 +1,6 @@
 import { EGradeLevel } from "../constants/enumTypes";
 import Test from "../database/models/mockTest.model";
+import TestHistory from "../database/models/testHistory.model";
 import TestQuestion from "../database/models/testQuestion.model";
 import { IMockTest } from "../types/interfaces";
 
@@ -7,6 +8,28 @@ export default class TestService {
   static listTests = async () => {
     const tests = await Test.find().populate("questions").exec();
     return tests;
+  };
+
+  static listTestsWithUserHistory = async (userId: string) => {
+    const tests = await Test.find();
+
+    const testsAndHistory = await Promise.all(
+      tests.map(async (test) => {
+        return {
+          test,
+          history: (await TestHistory.findOne({
+            mockTestId: test._id,
+            userId,
+          }).select("attemptsCount highestScore doneTime")) || {
+            attemptsCount: 0,
+            highestScore: 0,
+            doneTime: 0,
+          },
+        };
+      })
+    );
+
+    return testsAndHistory;
   };
 
   static listTestsByGrade = async (gradeLevel: EGradeLevel) => {

@@ -2,10 +2,14 @@ import { Request, Response } from "express";
 import stripe from "../clients/stripe";
 import PaymentService from "../services/payment.service";
 import { constructEvent } from "../utils/stripe";
+import { EPaymentStatus } from "../constants/enumTypes";
+import UserService from "../services/user.service";
+import { formatIntervalText } from "../utils/formatIntervalText";
 
 export default class CheckoutController {
   static createCheckoutSession = async (req: Request, res: Response) => {
     const clientUrl = process.env.CLIENT_URL;
+    const unlimitedPriceId = process.env.UNLIMITED_PRICE_ID;
 
     const { priceId, userId } = req.body;
 
@@ -16,7 +20,7 @@ export default class CheckoutController {
     // Create new Checkout Session for the order
     try {
       const session: any = await stripe.checkout.sessions.create({
-        mode: "subscription",
+        mode: priceId === unlimitedPriceId ? "payment" : "subscription",
         customer: customerId,
         line_items: [
           {
@@ -25,12 +29,12 @@ export default class CheckoutController {
           },
         ],
         // ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-        success_url: `${clientUrl}/successPayment?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${clientUrl}/canceledPayment`,
+        success_url: `${clientUrl}/thanh-toan-thanh-cong?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${clientUrl}/thanh-toan-that-bai`,
         // automatic_tax: { enabled: true }
       });
 
-      await PaymentService.createTransaction({
+      await PaymentService.upsertTransaction({
         userId,
         customerId,
         priceId,
@@ -44,6 +48,7 @@ export default class CheckoutController {
 
   static webhooks = async (req: any, res: Response) => {
     let event: any;
+    let paymentRecord;
 
     try {
       // construct stripe event
@@ -59,15 +64,46 @@ export default class CheckoutController {
     // Extract the object from the event.
     const dataObject = event.data.object;
 
-    const { customerId } = dataObject;
-
     switch (event.type) {
       case "checkout.session.completed":
-        // await PaymentService.updateStatusTransaction({});
         console.log("checkout.session.completed");
         break;
 
+      case "payment_intent.succeeded": {
+        if (dataObject.description === null) {
+          paymentRecord = await PaymentService.updateStatusTransaction({
+            customerId: dataObject.customer,
+            status: EPaymentStatus.Success,
+          });
+
+          await UserService.updateUser({
+            _id: paymentRecord?.userId,
+            subscription: "UNLIMITED",
+            subscriptionExpiresAt: null,
+          });
+
+          console.log("payment_intent.succeeded");
+        }
+        break;
+      }
+
       case "invoice.paid": {
+        paymentRecord = await PaymentService.updateStatusTransaction({
+          customerId: dataObject.customer,
+          status: EPaymentStatus.Success,
+        });
+
+        await UserService.updateUser({
+          _id: paymentRecord?.userId,
+          subscription:
+            formatIntervalText(
+              dataObject.lines.data[0].plan.interval.toUpperCase() as string
+            ) + "LY",
+          subscriptionExpiresAt: new Date(
+            dataObject.lines.data[0].period.end * 1000
+          ),
+        });
+
         console.log("invoice.paid");
         break;
       }

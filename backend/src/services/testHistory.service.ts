@@ -1,9 +1,39 @@
+import MockTest from "../database/models/mockTest.model";
 import TestHistory from "../database/models/testHistory.model";
 import { ITestHistory } from "../types/interfaces";
 
 export default class TestHistoryService {
+  static getAllTestsHistoryByUserId = async (userId: string) => {
+    const history = await TestHistory.find({
+      userId,
+    });
+    return history;
+  };
   static getTestHistoryById = async (id: string) => {
     const testHistory = await TestHistory.findById(id);
+    return testHistory;
+  };
+
+  static upsertTestHistory = async (testHistoryArgs: ITestHistory) => {
+    const { userId, mockTestId, doneTime, highestScore } = testHistoryArgs;
+    const testHistory = await TestHistory.findOneAndUpdate(
+      {
+        userId,
+        mockTestId,
+      },
+      {
+        $set: { doneTime, highestScore },
+        $inc: { attemptsCount: 1 },
+      },
+      {
+        upsert: true,
+        new: true,
+      }
+    );
+
+    await MockTest.findByIdAndUpdate(mockTestId, {
+      $inc: { takenCount: 1 },
+    });
     return testHistory;
   };
 

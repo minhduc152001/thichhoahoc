@@ -20,16 +20,18 @@
 }
 .col-name-test {
   width: 50%;
-  a {
+  .test-name-text {
     color: #f26222;
     font-size: 15px;
     font-weight: 600;
-    text-decoration: none;
   }
-  a:hover {
+  .test-name-text:hover {
     opacity: 0.7;
     cursor: pointer;
   }
+}
+.align-text {
+  text-align: center;
 }
 
 h4 {

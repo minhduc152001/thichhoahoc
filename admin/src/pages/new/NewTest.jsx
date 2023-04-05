@@ -42,7 +42,7 @@ const New = ({ title }) => {
       const url = backendHost + `/api/test`;
       await axios.post(url, { ...test, questions: questionsList });
       alert("Successfully added!");
-      // window.location.reload();
+      window.location.reload();
     } catch (error) {
       alert("Failed to add...");
       console.log(error);

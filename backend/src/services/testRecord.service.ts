@@ -7,9 +7,9 @@ export default class TestRecordService {
     return testRecord;
   };
 
-  static addTestRecord = async (testRecordArgs: ITestRecord) => {
-    const [testRecord] = await TestRecord.insertMany([testRecordArgs]);
-    return testRecord;
+  static addTestRecords = async (testRecordArgs: [ITestRecord]) => {
+    const testRecords = await TestRecord.insertMany(testRecordArgs);
+    return testRecords;
   };
 
   static updateTestRecord = async (testRecordArgs: ITestRecord) => {

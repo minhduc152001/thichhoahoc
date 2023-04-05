@@ -19,8 +19,8 @@ import Document from "./pages/Document/Document";
 import DetailDoc from "./pages/DetailDoc/DetailDoc";
 import Payment from "./pages/Payment/Payment";
 import LearnGuide from "./pages/LearnGuide/LearnGuide";
+import ResultPayment from "./pages/ResultPayment/ResultPayment";
 import NotFound from "./pages/NotFound/NotFound";
-import AdminPage from "./pages/Admin/Admin";
 import Topbar from "./components/topbar/Topbar";
 // import { useContext } from "react";
 // import { ParentProvider } from "./store/Provider";
@@ -28,7 +28,7 @@ import Topbar from "./components/topbar/Topbar";
 function App() {
   // const useStore = useContext(ParentProvider);
   const email = localStorage.getItem("email");
-  
+
   return (
     <>
       <Header />
@@ -64,6 +64,14 @@ function App() {
           <Route path="/tai-lieu" element={<Document />} />
           <Route path="/thanh-toan" element={<Payment />} />
           <Route path="/huong-dan" element={<LearnGuide />} />
+          <Route
+            path="/thanh-toan-thanh-cong"
+            element={<ResultPayment status={"success"} />}
+          />
+          <Route
+            path="/thanh-toan-that-bai"
+            element={<ResultPayment status={"failed"} />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

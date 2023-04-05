@@ -11,18 +11,20 @@ export default class CourseService {
 
   static getCoursesAndCompletion = async (userId: string) => {
     const courses = await Course.find().populate("lessons").exec();
+
     const completion = await Promise.all(
       courses
         .filter((course) => (course.lessons as any)?.length > 0)
         .map(async (course) => {
           return {
             course,
-            completedLessons: (
-              await ParticipationCourse.findOne({
-                userId,
-                courseId: course._id,
-              }).select("completedLessons")
-            )?.completedLessons,
+            completedLessons:
+              (
+                await ParticipationCourse.findOne({
+                  userId,
+                  courseId: course._id,
+                }).select("completedLessons")
+              )?.completedLessons || [],
           };
         })
     );

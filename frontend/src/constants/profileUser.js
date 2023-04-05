@@ -16,7 +16,7 @@ export const updateProfileUser = ({
   subscriptionExpiresAt,
 }) => {
   if (subscription) {
-    localStorage.setItem("userId", subscription);
+    localStorage.setItem("subscription", subscription);
   }
   if (avatar) {
     localStorage.setItem("avatar", avatar);
@@ -27,7 +27,7 @@ export const updateProfileUser = ({
   if (lastName) {
     localStorage.setItem("lastName", lastName);
   }
-  if (subscriptionExpiresAt) {
+  if (subscriptionExpiresAt || subscriptionExpiresAt === null) {
     localStorage.setItem("subscriptionExpiresAt", subscriptionExpiresAt);
   }
 };

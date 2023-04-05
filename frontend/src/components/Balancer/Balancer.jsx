@@ -21,7 +21,7 @@ function Balancer() {
     <div>
       <MainTitle title={"cân bằng phương trình hoá học"} />
       <h5 aria-label="inputFormula">Phương trình</h5>
-      <div style={{ margin: "20px" }}>
+      <div style={{ margin: "20px", textAlign: "center" }}>
         <input
           type="text"
           autoComplete="off"
@@ -44,17 +44,15 @@ function Balancer() {
           </button>
         </div>
 
-        <p>
+        <p style={{ marginTop: "20px" }}>
           <span style={{ color: "green", fontWeight: "bold" }}>Kết quả: </span>
           <span id="balanced" className="output"></span>
         </p>
 
         <p>
-          {/* <span style={{ color: "red" }}>Lỗi </span> */}
           <span id="message" style={{ color: "red" }} className="output"></span>
         </p>
         <p>
-          {/* <span style={{ color: "red" }}>Kiểm tra lại: </span> */}
           <span id="codeOutput" className="output"></span>
         </p>
       </div>

@@ -8,12 +8,16 @@ const testRecordResolvers = {
   },
 
   addTestRecord: async (_: undefined, args: { testRecord: ITestRecord }) => {
-    const testRecord = await TestRecordService.addTestRecord(args.testRecord);
+    const testRecord = await TestRecordService.addTestRecords([
+      args.testRecord,
+    ]);
     return testRecord;
   },
 
   updateTestRecord: async (_: undefined, args: { testRecord: ITestRecord }) => {
-    const testRecord = await TestRecordService.updateTestRecord(args.testRecord);
+    const testRecord = await TestRecordService.updateTestRecord(
+      args.testRecord
+    );
     return testRecord;
   },
 

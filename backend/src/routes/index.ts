@@ -8,6 +8,8 @@ import documentRoutes from "./document.routes";
 import testRoutes from "./test.routes";
 import partipationCourseRoutes from "./partipationCourse.routes";
 import checkoutRoutes from "./checkout.routes";
+import testRecordRoutes from "./testRecord.routes";
+import testHistoryRoutes from "./testHistory.routes";
 
 export default (app: Application) => {
   healthRoutes(app);
@@ -19,4 +21,6 @@ export default (app: Application) => {
   testRoutes(app);
   partipationCourseRoutes(app);
   checkoutRoutes(app);
+  testRecordRoutes(app);
+  testHistoryRoutes(app);
 };

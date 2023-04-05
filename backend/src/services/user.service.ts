@@ -154,7 +154,7 @@ export default class UserService {
     };
   };
 
-  static updateUser = async (args: IUser) => {
+  static updateUser = async (args: any) => {
     const user = await User.findByIdAndUpdate(args._id, { $set: args });
     return user;
   };

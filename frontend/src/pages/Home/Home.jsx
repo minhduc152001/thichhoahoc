@@ -2,8 +2,23 @@ import React from "react";
 import "./Home.scss";
 import HomeBanner from "../../components/HomeBanner/HomeBanner";
 import Carousel from "../../components/Carousel/Carousel";
+import { user } from "../../constants/profileUser";
+import {
+  needLoginToast,
+  sendSaleInfoSuccessfully,
+  sendSuccessfully,
+} from "../../utils/toastInfo";
 
 function Home() {
+  const handleSubmitRiddle = () => {
+    if (!!user.userId) sendSuccessfully();
+    else needLoginToast();
+  };
+
+  const handleClickBlog = () => {
+    window.location.href = "/huong-dan";
+  };
+
   return (
     <div>
       <HomeBanner />
@@ -100,6 +115,7 @@ function Home() {
                   type="button"
                   value="Gửi ngay"
                   className="info-send-button"
+                  onClick={() => sendSaleInfoSuccessfully()}
                 />
               </div>
             </div>
@@ -122,7 +138,11 @@ function Home() {
                   Từ khi mới bắt đầu tiếp xúc với hoá học, chúng ta đã quen
                   thuộc với số mol. Có thể nói hai công thức phổ biến nhất trong
                   bộ môn…
-                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <i
+                    onClick={handleClickBlog}
+                    class="fa fa-arrow-circle-right"
+                    aria-hidden="true"
+                  ></i>
                 </p>
               </div>
             </div>
@@ -145,7 +165,11 @@ function Home() {
                 <p className="news-content">
                   Từ khi mới bắt đầu tiếp xúc với hoá học. Có thể nói hai công
                   thức phổ biến nhất trong bộ môn…
-                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <i
+                    onClick={handleClickBlog}
+                    class="fa fa-arrow-circle-right"
+                    aria-hidden="true"
+                  ></i>
                 </p>
               </div>
             </div>
@@ -170,7 +194,11 @@ function Home() {
                 <p className="news-content">
                   Vết thương tâm hồn rất khó hàn gắn và chỉ có thể lành được khi
                   có tình thương yêu chân thành và thực sự…
-                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <i
+                    onClick={handleClickBlog}
+                    class="fa fa-arrow-circle-right"
+                    aria-hidden="true"
+                  ></i>
                 </p>
               </div>
             </div>
@@ -193,7 +221,11 @@ function Home() {
                 <p className="news-content">
                   Từ khi mới bắt đầu tiếp xúc với hoá học. Có thể nói hai công
                   thức phổ biến nhất trong bộ môn…
-                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <i
+                    onClick={handleClickBlog}
+                    class="fa fa-arrow-circle-right"
+                    aria-hidden="true"
+                  ></i>
                 </p>
               </div>
             </div>
@@ -221,7 +253,11 @@ function Home() {
                 <p className="news-content">
                   Lịch thi tuyển sinh vào lớp 6 trường Hà Nội Amsterdam năm học
                   2022 - 2023.…
-                  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  <i
+                    onClick={handleClickBlog}
+                    class="fa fa-arrow-circle-right"
+                    aria-hidden="true"
+                  ></i>
                 </p>
               </div>
             </div>
@@ -246,7 +282,12 @@ function Home() {
                 </a>
                 <p className="news-content">
                   Đề thi học sinh giỏi môn Hoá học THPT tỉnh Quảng Ninh năm 2023
-                  …<i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                  …
+                  <i
+                    onClick={handleClickBlog}
+                    class="fa fa-arrow-circle-right"
+                    aria-hidden="true"
+                  ></i>
                 </p>
               </div>
             </div>
@@ -285,11 +326,19 @@ function Home() {
               <textarea
                 name="riddle-answer-input"
                 id="answer-input"
+                disabled={!user.userId}
                 placeholder="Nhập lời giải/đáp án của bạn"
                 style={{ resize: "none" }}
               ></textarea>
               <div className="submit-riddle-btns">
-                <button>Gửi lời giải</button>
+                <button
+                  {...(!user.userId && {
+                    style: { opacity: "0,5", cursor: "default" },
+                  })}
+                  onClick={handleSubmitRiddle}
+                >
+                  Gửi lời giải
+                </button>
                 <button>Xem chi tiết</button>
               </div>
             </div>

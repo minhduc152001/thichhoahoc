@@ -6,15 +6,15 @@ kill_timeout = 5
 processes = []
 
 [env]
-  ANNUALLY_PRICE_ID = "price_1Mrf0mKZ5Ry91xh90f2CiQW0"
   CLIENT_URL = "https://chemx.fly.dev"
   JWT_SECRET = "vuminhduc"
   MONGODB_URI = "mongodb+srv://minhduc152001:sun291514001@graduation-thesis.eatykkx.mongodb.net/thesis?retryWrites=true&w=majority"
   MONTHLY_PRICE_ID = "price_1MrexDKZ5Ry91xh9kQAwQzOH"
+  ANNUALLY_PRICE_ID = "price_1MsHC4KZ5Ry91xh9PUYbGYOX"
+  UNLIMITED_PRICE_ID = "price_1MsA2YKZ5Ry91xh9kmWKoVqn"
   PORT = 8081
   STRIPE_API_KEY = "sk_test_51MremvKZ5Ry91xh9AhmBvc5huQiscmsudC7wr9nslRfSdrgVaJV2yJVkCIuZUjVZJrRWpzw53P96KWv9SFX12X6o00TtN6MEij"
-  STRIPE_WEBHOOK_SECRET = "whsec_W7SWyCY4mHlGDsTNuewLSrzByV0mgksI"
-  UNLIMITED_PRICE_ID = "price_1Mrf8OKZ5Ry91xh9IdfMtPOP"
+  STRIPE_WEBHOOK_SECRET = "whsec_yR1PkA6ZOiDIyU8sjRtbzcdgQpfGmrsK"
 
 [experimental]
   auto_rollback = true

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./RiddleAnswer.scss";
 import MainTitle from "../MainTitle/MainTitle";
 import Chat from "../Chat/Chat";
+import { user } from "../../constants/profileUser";
+import { needLoginToast } from "../../utils/toastInfo";
 
 function RiddleAnswer() {
   const riddleLink = window.location.href;
@@ -50,17 +52,20 @@ function RiddleAnswer() {
   };
 
   const handleSubmit = () => {
-    userAnswers = {
-      id: "3455",
-      firstName: "Duong",
-      lastName: "Nguyen T A",
-      avatar: "/default_avatar.png",
-      createdAt: new Date(),
-      question: userInput,
-    };
+    if (user.userId) {
+      userAnswers = {
+        id: user.userId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        avatar: user.avatar,
+        createdAt: new Date(),
+        question: userInput,
+      };
 
-    setAnswers([...answers, userAnswers]);
-    console.log(answers);
+      setAnswers([...answers, userAnswers]);
+    } else {
+      needLoginToast();
+    }
   };
 
   return (
@@ -122,9 +127,14 @@ function RiddleAnswer() {
               type="text"
               name="answer-riddle"
               id="answer-riddle"
+              disabled={!user.userId}
               onChange={handleAnswerInput}
             />
-            <div className="riddle-answer-btn" onClick={handleSubmit}>
+            <div
+              className="riddle-answer-btn"
+              {...(!user.userId && { style: { opacity: "0.5" } })}
+              onClick={handleSubmit}
+            >
               <label htmlFor="answer-riddle">Trả lời</label>
             </div>
           </div>

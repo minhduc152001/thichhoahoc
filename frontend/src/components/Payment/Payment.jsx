@@ -5,8 +5,8 @@ import { user } from "../../constants/profileUser";
 
 const priceIds = [
   "price_1MrexDKZ5Ry91xh9kQAwQzOH",
-  "price_1Mrf0mKZ5Ry91xh90f2CiQW0",
-  "price_1Mrf8OKZ5Ry91xh9IdfMtPOP",
+  "price_1MsHC4KZ5Ry91xh9PUYbGYOX",
+  "price_1MsA2YKZ5Ry91xh9kmWKoVqn",
 ];
 
 const plans = [
@@ -38,12 +38,14 @@ function Payment() {
   // );
   const { REACT_APP_BE_HOST } = process.env;
   const [currentPlan, setCurrentPlan] = useState(3);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSelectPlan = (noPlan) => {
     setCurrentPlan(noPlan);
   };
 
   const handleCreateCheckout = async (priceId) => {
+    setIsLoading(true);
     const { data } = await axios.post(
       `${REACT_APP_BE_HOST}/create-checkout-session`,
       {
@@ -184,12 +186,14 @@ function Payment() {
       </div>
 
       <div className="submit-container">
-        <div
+        <button
           className="payment-button"
+          disabled={isLoading}
+          {...(isLoading && { style: { opacity: "0.5", cursor: "default" } })}
           onClick={() => handleCreateCheckout(priceIds[currentPlan - 1])}
         >
-          Thanh toán
-        </div>
+          {isLoading ? "Đang xử lý..." : "Thanh toán"}
+        </button>
       </div>
     </div>
   );

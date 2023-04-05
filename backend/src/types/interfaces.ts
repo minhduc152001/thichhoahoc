@@ -179,12 +179,12 @@ export interface ITestRecord {
 
 export interface ITestHistory {
   _id?: string;
-  mockTestId: string;
-  userId: string;
-  attemptsCount: number;
-  highestScore: number;
-  doneTime: number;
-  createdAt: Date;
+  mockTestId?: string;
+  userId?: string;
+  attemptsCount?: number;
+  highestScore?: number;
+  doneTime?: number;
+  createdAt?: Date;
 }
 
 export interface IPayment {
