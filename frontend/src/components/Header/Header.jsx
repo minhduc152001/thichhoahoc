@@ -18,10 +18,12 @@ function Header() {
   const [avatarImg, setAvatarImg] = useState(user.avatar);
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
+  const [newFirstName, setNewFirstName] = useState(user.firstName);
+  const [newLastName, setNewLastName] = useState(user.lastName);
   const [subscription, setSubscription] = useState(user.subscription);
 
   const formatDateInVN = () => {
-    if (user.subscriptionExpiresAt === 'null') return "Vô thời hạn";
+    if (user.subscriptionExpiresAt === "null") return "Vô thời hạn";
 
     const date = new Date(user.subscriptionExpiresAt)
       ?.toLocaleDateString("vi-VN")
@@ -36,6 +38,10 @@ function Header() {
   };
 
   const updateProfile = async () => {
+    if (lastName.trim() === "" || firstName.trim() === "") {
+      toast.error("Vui lòng thông tin hợp lệ!");
+      return;
+    }
     toast.success("Cập nhật tài khoản thành công");
     await axios.put(`${REACT_APP_BE_HOST}/api/user/${user.userId}`, {
       firstName,
@@ -43,6 +49,8 @@ function Header() {
       avatar: avatarImg,
       subscription,
     });
+    setNewFirstName(firstName);
+    setNewLastName(lastName);
     updateProfileUser({ firstName, lastName, avatar: avatarImg });
   };
 
@@ -336,9 +344,10 @@ function Header() {
                   </div>
                   <div
                     className="btn-save-changes"
-                    {...(lastName === user.lastName && {
-                      style: { opacity: 0.3, cursor: "default" },
-                    })}
+                    {...(lastName &&
+                      lastName === newLastName && {
+                        style: { opacity: 0.3, cursor: "default" },
+                      })}
                     onClick={updateProfile}
                   >
                     Lưu thay đổi
@@ -374,9 +383,14 @@ function Header() {
                   <div
                     className="btn-save-changes"
                     style={{ marginTop: "46px" }}
-                    {...(firstName === user.firstName && {
-                      style: { opacity: 0.3, cursor: "default" },
-                    })}
+                    {...(firstName &&
+                      firstName === newFirstName && {
+                        style: {
+                          marginTop: "46px",
+                          opacity: 0.3,
+                          cursor: "default",
+                        },
+                      })}
                     onClick={updateProfile}
                   >
                     Lưu thay đổi
@@ -405,12 +419,13 @@ function Header() {
                       {user.subscription}
                     </div>
                   </div>
-                  <div
+                  <a
+                    href="/thanh-toan"
                     className="btn-save-changes"
                     style={{ marginTop: "82px" }}
                   >
                     {user.subscription === "UNLIMITED" ? "" : "Nâng cấp"}
-                  </div>
+                  </a>
                 </div>
               </div>
 

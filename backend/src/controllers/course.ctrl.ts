@@ -61,4 +61,13 @@ export default class CourseCtrl {
       res.status(400).json({ error });
     }
   };
+
+  static updateSlugCourse = async (req: Request, res: Response) => {
+    try {
+      await CourseService.updateSlug();
+      return res.status(200).json({ action: "ok", status: "success" });
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  };
 }

@@ -1,6 +1,8 @@
 import React from "react";
 import "./Riddle.scss";
 import MainTitle from "../MainTitle/MainTitle";
+import { user } from "../../constants/profileUser";
+import NeedLogin from "../NeedLogin/NeedLogin";
 
 function Riddle() {
   const riddles = [
@@ -74,19 +76,23 @@ function Riddle() {
     <div>
       <MainTitle title={"đố vui cùng chemx"} />
       <div className="riddles-container">
-        {riddles.map((r, i) => (
-          <>
-            <div className="riddles-list col">
-              <img src={r.image_url} alt="Câu đố số 1" />
-              <div className="riddle-content">
-                <a href={`/do-vui/${r.id}`} className="riddle-title">
-                  Câu hỏi đố vui {i + 1}
-                </a>
-                <div className="riddle-req">{r.question}</div>
+        {!!user?.userId ? (
+          riddles.map((r, i) => (
+            <>
+              <div className="riddles-list col">
+                <img src={r.image_url} alt="Câu đố số 1" />
+                <div className="riddle-content">
+                  <a href={`/do-vui/${r.id}`} className="riddle-title">
+                    Câu hỏi đố vui {i + 1}
+                  </a>
+                  <div className="riddle-req">{r.question}</div>
+                </div>
               </div>
-            </div>
-          </>
-        ))}
+            </>
+          ))
+        ) : (
+          <NeedLogin />
+        )}
       </div>
     </div>
   );

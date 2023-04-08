@@ -2,6 +2,7 @@ import { EGradeLevel } from "../constants/enumTypes";
 import Course from "../database/models/course.model";
 import ParticipationCourse from "../database/models/participationCourse.model";
 import { ICourse } from "../types/interfaces";
+import { generateSlug } from "../utils/generateSlug";
 
 export default class CourseService {
   static listCourses = async () => {
@@ -43,6 +44,7 @@ export default class CourseService {
 
   static addCourse = async (courseArgs: ICourse) => {
     const [course] = await Course.insertMany([courseArgs]);
+    await this.updateSlug();
     return course;
   };
 
@@ -57,5 +59,18 @@ export default class CourseService {
   static removeCourse = async (_id: string) => {
     const course = await Course.findByIdAndDelete(_id);
     return `The course ${course?._id} was deleted`;
+  };
+
+  static updateSlug = async () => {
+    const documents = await Course.find({});
+    const updates = documents.map((doc) => ({
+      updateOne: {
+        filter: { _id: doc._id },
+        update: { $set: { slug: generateSlug(doc.name as string) } },
+      },
+    }));
+
+    await Course.bulkWrite(updates);
+    console.log("slug ok");
   };
 }

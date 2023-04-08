@@ -156,8 +156,6 @@ function ListCourses() {
               defaultValue="newest"
               onChange={(e) => {
                 const sort = e.target.value;
-                console.log(sort);
-
                 if (sort === "most-learners") sortMostLearners();
                 if (sort === "joined") sortJoinedCourses();
                 if (sort === "not-join") sortUnjoinedCourses();

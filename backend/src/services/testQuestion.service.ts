@@ -20,6 +20,17 @@ export default class TestQuestionService {
     return await TestQuestion.findById(testQuestionArgs._id);
   };
 
+  static updateManyTestQuestions = async (
+    testQuestionArgs: ITestQuestion[]
+  ) => {
+    const questions = await Promise.all(
+      testQuestionArgs.map(async (el) => {
+        return await TestQuestion.findByIdAndUpdate(el._id as any, el);
+      })
+    );
+    return questions;
+  };
+
   static removeTestQuestion = async (_id: string) => {
     const testQuestion = await TestQuestion.findByIdAndDelete(_id);
     return `The testQuestion ${testQuestion?._id} was deleted`;

@@ -63,6 +63,7 @@ export interface ICourse {
   lessons?: [ILesson];
   createdAt?: Date;
   updatedAt?: Date;
+  slug?: string;
 }
 
 export interface ICourseIdAndUserId {

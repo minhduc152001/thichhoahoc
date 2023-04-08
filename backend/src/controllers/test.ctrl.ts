@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import TestService from "../services/test.service";
+import TestQuestionService from "../services/testQuestion.service";
 
 export default class TestCtrl {
   static getAllTests = async (req: Request, res: Response) => {
@@ -39,6 +40,7 @@ export default class TestCtrl {
   static updateTest = async (req: Request, res: Response) => {
     try {
       await TestService.updateTest(req.body);
+      await TestQuestionService.updateManyTestQuestions(req.body.questions);
       return res
         .status(200)
         .json({ action: "updated test", status: "success" });

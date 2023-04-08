@@ -63,7 +63,7 @@ export default class TestService {
                 $push: { questions: el._id },
               },
               { new: true }
-            ).then((res) => console.log(res))
+            )
           );
         });
       }

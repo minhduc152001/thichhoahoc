@@ -4,7 +4,7 @@ import { ILesson } from "../types/interfaces";
 
 export default class LessonService {
   static listLessons = async () => {
-    const lessons = await Lesson.find();
+    const lessons = await Lesson.find().populate("courseId").exec();
     return lessons;
   };
 
@@ -14,11 +14,14 @@ export default class LessonService {
   };
 
   static getLessonById = async (id: string) => {
-    const course = await Lesson.findById(id);
+    const course = await Lesson.findById(id).populate("courseId").exec();
     return course;
   };
 
   static addLesson = async (lessonArgs: ILesson) => {
+    const course = await Course.findOne({ slug: lessonArgs.courseId });
+    if (!course) throw new Error("Course is not found");
+    lessonArgs.courseId = course?._id as string;
     const [lesson] = await Lesson.insertMany([lessonArgs]);
     await Course.findByIdAndUpdate(
       lessonArgs.courseId,
