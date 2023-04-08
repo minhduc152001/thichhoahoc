@@ -18,10 +18,11 @@ const New = ({ title }) => {
   const [updatedRiddleInfo, setUpdatedRiddleInfo] = useState({ _id: riddleId });
   const [progressPercent, setProgressPercent] = useState(0);
 
-  const fetchData = () => {
-    axios.get(`${backendHost}/api/riddle/${riddleId}`).then((response) => {
-      setData(response.data.riddle);
-    });
+  const fetchData = async () => {
+    const { data } = await axios.get(`${backendHost}/api/riddle/${riddleId}`);
+    setData(data.riddle);
+    const { imageUrl, name, correctAnswer } = data.riddle;
+    setUpdatedRiddleInfo({ imageUrl, name, correctAnswer });
   };
 
   useEffect(() => {
@@ -58,15 +59,21 @@ const New = ({ title }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const url = backendHost + `/api/riddle/${data.id}`;
-      await axios.put(url, updatedRiddleInfo);
-      alert("Successfully updated!");
-      window.location.reload();
-    } catch (error) {
-      alert("Failed to update...");
-      console.log(error);
-    }
+    const { imageUrl, name, correctAnswer } = updatedRiddleInfo;
+    const isFormFilled = imageUrl && name && correctAnswer.length > 0;
+    if (!isFormFilled) {
+      alert("You have to fill out all fields!");
+      return;
+    } else
+      try {
+        const url = backendHost + `/api/riddle/${data.id}`;
+        await axios.put(url, updatedRiddleInfo);
+        alert("Successfully updated!");
+        window.location.reload();
+      } catch (error) {
+        alert("Failed to update...");
+        console.log(error);
+      }
   };
 
   return (

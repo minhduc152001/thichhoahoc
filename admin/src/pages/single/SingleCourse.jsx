@@ -50,7 +50,7 @@ const Single = () => {
                 <h1 className="itemTitle">{data.name}</h1>
                 <div className="detailItem">
                   <span className="itemKey">ID:</span>
-                  <span className="itemValue">{data.id}</span>
+                  <span className="itemValue">{data.slug}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Description:</span>

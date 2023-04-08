@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import storage from "../../firebase";
+import Select from "../../components/Select/Select";
 
 const New = ({ title }) => {
   // eslint-disable-next-line no-restricted-globals
@@ -14,13 +15,21 @@ const New = ({ title }) => {
   const backendHost = process.env.REACT_APP_BE_HOST;
 
   const [file, setFile] = useState("");
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const [updatedCourseInfo, setUpdatedCourseInfo] = useState({ _id: courseId });
   const [progressPercent, setProgressPercent] = useState(0);
 
-  const fetchData = () => {
-    axios.get(`${backendHost}/api/course/${courseId}`).then((response) => {
-      setData(response.data.course);
+  const fetchData = async () => {
+    const response = await axios.get(`${backendHost}/api/course/${courseId}`);
+    setData(response.data.course);
+    const { author, name, img, description, gradeLevel } = response.data.course;
+    setUpdatedCourseInfo({
+      author,
+      name,
+      img,
+      description,
+      gradeLevel,
+      _id: courseId,
     });
   };
 
@@ -58,16 +67,24 @@ const New = ({ title }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const url = backendHost + `/api/course/${data.id}`;
-      await axios.put(url, updatedCourseInfo);
-      alert("Successfully updated!");
-      window.location.reload();
-    } catch (error) {
-      alert("Failed to update...");
-      console.log(error);
-    }
+    const { author, name, img, description, gradeLevel } = updatedCourseInfo;
+    const isFormFilled = author && name && img && description && gradeLevel;
+    if (!isFormFilled) {
+      alert("You have to fill out all fields!");
+      return;
+    } else
+      try {
+        const url = backendHost + `/api/course/${data.id}`;
+        await axios.put(url, updatedCourseInfo);
+        alert("Successfully updated!");
+        window.location.reload();
+      } catch (error) {
+        alert("Failed to update...");
+        console.log(error);
+      }
   };
+
+  console.log(updatedCourseInfo);
 
   return (
     <div className="new">
@@ -158,35 +175,17 @@ const New = ({ title }) => {
                 />
               </div>
 
-              {/* subscription */}
-              <div className="formInput">
-                <label>Grade level</label>
-                <select
-                  name="subscription"
-                  id="subscription-select"
-                  defaultValue={data.gradeLevel}
-                  onChange={(e) => {
-                    e.preventDefault();
-                    setUpdatedCourseInfo((prev) => {
-                      {
-                        return { ...prev, gradeLevel: e.target.value };
-                      }
-                    });
-                  }}
-                >
-                  <option value="G10">Grade 10</option>
-                  <option value="G11">Grade 11</option>
-                  <option value="G12">Grade 12</option>
-                  <option value="collegePrep">College prep</option>
-                </select>
-              </div>
+              <Select
+                gradeLevel={data.gradeLevel}
+                setUpdatedInfo={setUpdatedCourseInfo}
+              />
 
               {/* author */}
               <div className="formInput">
                 <label>Author</label>
                 <input
                   type="text"
-                  defaultValue={data.author}
+                  defaultValue={data?.author}
                   onChange={(e) => {
                     e.preventDefault();
                     setUpdatedCourseInfo((prev) => {
@@ -203,7 +202,11 @@ const New = ({ title }) => {
 
               <div className="formInput">
                 <label>Number of students</label>
-                <input type="number" value={data.buyersCount} disabled></input>
+                <input
+                  type="number"
+                  defaultValue={data?.students?.length}
+                  disabled
+                ></input>
               </div>
 
               <button onClick={handleSubmit}>Send</button>

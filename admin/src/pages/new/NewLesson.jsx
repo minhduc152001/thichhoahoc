@@ -8,8 +8,14 @@ import storage from "../../firebase";
 import axios from "axios";
 
 const New = ({ title }) => {
-  const [file, setFile] = useState();
-  const [lesson, setLesson] = useState({});
+  const [file, setFile] = useState("");
+  const [lesson, setLesson] = useState({
+    videoUrl: "",
+    name: "",
+    courseId: "",
+    description: "",
+    text: "",
+  });
   const [progressPercent, setProgressPercent] = useState(0);
 
   const backendHost = process.env.REACT_APP_BE_HOST;
@@ -44,15 +50,21 @@ const New = ({ title }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const url = backendHost + `/api/lesson`;
-      await axios.post(url, lesson);
-      alert("Successfully added!");
-      window.location.reload();
-    } catch (error) {
-      alert("Failed to add...");
-      console.log(error);
-    }
+    const { courseId, description, name, text, videoUrl } = lesson;
+    const isFormFilled = name && courseId && description && videoUrl && text;
+    if (!isFormFilled) {
+      alert("You have to fill out all fields!");
+      return;
+    } else
+      try {
+        const url = backendHost + `/api/lesson`;
+        await axios.post(url, lesson);
+        alert("Successfully added!");
+        window.location.reload();
+      } catch (error) {
+        alert("Invalid course ID");
+        console.log(error);
+      }
   };
 
   return (
@@ -140,7 +152,7 @@ const New = ({ title }) => {
                       }
                     });
                   }}
-                  placeholder="63f0d09b1b42be8b2176b10d"
+                  placeholder="khoa-hoc-cap-toc-on-thi-dai-hoc-2023"
                 />
               </div>
 

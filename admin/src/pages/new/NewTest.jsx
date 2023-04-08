@@ -5,6 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import { v4 } from "uuid";
 import axios from "axios";
+import { allFieldsNotEmpty } from "../../utils/checkAllFieldsEmpty";
 
 const New = ({ title }) => {
   const backendHost = process.env.REACT_APP_BE_HOST;
@@ -22,7 +23,13 @@ const New = ({ title }) => {
   };
 
   const [questionsList, setQuestionsList] = useState([initNewQuestion(v4())]);
-  const [test, setTest] = useState({ gradeLevel: "G10", questions: [] });
+  const [test, setTest] = useState({
+    name: "",
+    score: 0,
+    totalTime: 0,
+    gradeLevel: "G10",
+    questions: [],
+  });
 
   const handleNewQuestion = () => {
     setQuestionsList((prev) => {
@@ -38,15 +45,22 @@ const New = ({ title }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const url = backendHost + `/api/test`;
-      await axios.post(url, { ...test, questions: questionsList });
-      alert("Successfully added!");
-      window.location.reload();
-    } catch (error) {
-      alert("Failed to add...");
-      console.log(error);
-    }
+    const { name, score, totalTime } = test;
+    const isFormFilled =
+      name && score > 0 && totalTime > 0 && allFieldsNotEmpty(questionsList);
+    if (!isFormFilled) {
+      alert("All fields are required and must be valid!");
+      return;
+    } else
+      try {
+        const url = backendHost + `/api/test`;
+        await axios.post(url, { ...test, questions: questionsList });
+        alert("Successfully added!");
+        window.location.reload();
+      } catch (error) {
+        alert("Failed to add...");
+        console.log(error);
+      }
   };
 
   return (
@@ -181,7 +195,7 @@ const New = ({ title }) => {
                     className="question-title"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    Explaination:
+                    Explanation:
                   </div>
                   <textarea
                     onChange={(e) => {

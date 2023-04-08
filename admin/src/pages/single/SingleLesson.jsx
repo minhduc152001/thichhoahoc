@@ -57,13 +57,13 @@ const Single = () => {
               />
               <div className="details">
                 <h1 className="itemTitle">{data.name}</h1>
-                <div className="detailItem">
+                {/* <div className="detailItem">
                   <span className="itemKey">ID:</span>
                   <span className="itemValue">{data.id}</span>
-                </div>
+                </div> */}
                 <div className="detailItem">
                   <span className="itemKey">Course ID:</span>
-                  <span className="itemValue">{data.courseId}</span>
+                  <span className="itemValue">{data?.courseId?.slug}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Description:</span>

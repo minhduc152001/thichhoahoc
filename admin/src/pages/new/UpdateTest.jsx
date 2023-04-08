@@ -5,6 +5,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
+import Select from "../../components/Select/Select";
+import { allFieldsNotEmpty } from "../../utils/checkAllFieldsEmpty";
 
 const New = ({ title }) => {
   // eslint-disable-next-line no-restricted-globals
@@ -14,19 +16,23 @@ const New = ({ title }) => {
   const [data, setData] = useState([]);
   const [updatedTestInfo, setUpdatedTestInfo] = useState({ _id: testId });
   const [questions, setQuestions] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const fetchData = () => {
-    axios.get(`${backendHost}/api/test/${testId}`).then((response) => {
-      setData(response.data.test);
+  const fetchData = async () => {
+    const { data } = await axios.get(`${backendHost}/api/test/${testId}`);
+    setData(data.test);
+    const { name, totalTime, gradeLevel, questions } = data.test;
+    setUpdatedTestInfo({
+      name,
+      totalTime,
+      gradeLevel,
+      score: data.test.questions[0].score,
     });
+    setQuestions(questions);
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    setQuestions(data.questions);
   }, []);
 
   const handleRemoveQuestionItem = (id) => {
@@ -35,14 +41,29 @@ const New = ({ title }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      // const url = backendHost + `/api/test/${data.id}`;
-      // await axios.put(url, updatedTestInfo);
-      alert("Successfully updated!");
-      window.location.reload();
-    } catch (error) {
-      alert("Failed to update...");
-      console.log(error);
+    const { name, totalTime, gradeLevel, score } = updatedTestInfo;
+    const isFormFilled =
+      name &&
+      totalTime > 0 &&
+      gradeLevel &&
+      score > 0 &&
+      allFieldsNotEmpty(questions);
+    if (!isFormFilled) {
+      alert("All fields are required and must be valid!");
+      return;
+    } else {
+      setIsLoading(true);
+      try {
+        const url = backendHost + `/api/test/${data.id}`;
+        await axios.put(url, { ...updatedTestInfo, questions });
+        alert("Successfully updated!");
+        setIsLoading(false);
+        window.location.reload();
+      } catch (error) {
+        setIsLoading(false);
+        alert("Failed to update...");
+        console.log(error);
+      }
     }
   };
 
@@ -176,7 +197,7 @@ const New = ({ title }) => {
                     className="question-title"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    Explaination:
+                    Explanation:
                   </div>
                   <textarea
                     onChange={(e) => {
@@ -216,25 +237,10 @@ const New = ({ title }) => {
                 />
               </div>
 
-              <div className="formInput">
-                <label>Grade level</label>
-                <select
-                  defaultValue={data.gradeLevel}
-                  onChange={(e) => {
-                    e.preventDefault();
-                    setUpdatedTestInfo((prev) => {
-                      {
-                        return { ...prev, gradeLevel: e.target.value };
-                      }
-                    });
-                  }}
-                >
-                  <option value="G10">Grade 10</option>
-                  <option value="G11">Grade 11</option>
-                  <option value="G12">Grade 12</option>
-                  <option value="collegePrep">College prep</option>
-                </select>
-              </div>
+              <Select
+                gradeLevel={data.gradeLevel}
+                setUpdatedInfo={setUpdatedTestInfo}
+              />
 
               <div className="formInput">
                 <label>Total time</label>
@@ -256,6 +262,30 @@ const New = ({ title }) => {
               </div>
 
               <div className="formInput">
+                <label>Score per question</label>
+                <input
+                  type="number"
+                  defaultValue={data?.questions?.[0]?.score}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setUpdatedTestInfo((prev) => {
+                      {
+                        return {
+                          ...prev,
+                          score: e.target.value,
+                        };
+                      }
+                    });
+                  }}
+                ></input>
+              </div>
+
+              <div className="formInput">
+                <label>Total of completion</label>
+                <input type="number" disabled value={data?.takenCount}></input>
+              </div>
+
+              <div className="formInput">
                 <label>Date create</label>
                 <input
                   type="text"
@@ -264,7 +294,9 @@ const New = ({ title }) => {
                 ></input>
               </div>
 
-              <button onClick={handleSubmit}>Send</button>
+              <button disabled={isLoading} onClick={handleSubmit}>
+                {isLoading ? "Sending..." : "Send"}
+              </button>
             </form>
           </div>
         </div>

@@ -6,6 +6,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  YAxis,
 } from "recharts";
 
 const data = [
@@ -44,6 +45,7 @@ const Chart = ({ aspect, title }) => {
             fillOpacity={1}
             fill="url(#total)"
           />
+          <YAxis />
         </AreaChart>
       </ResponsiveContainer>
     </div>

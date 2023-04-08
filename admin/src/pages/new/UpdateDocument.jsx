@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import storage from "../../firebase";
+import Select from "../../components/Select/Select";
 
 const New = ({ title }) => {
   // eslint-disable-next-line no-restricted-globals
@@ -14,16 +15,19 @@ const New = ({ title }) => {
   const backendHost = process.env.REACT_APP_BE_HOST;
 
   const [file, setFile] = useState("");
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const [updatedDocumentInfo, setUpdatedDocumentInfo] = useState({
     _id: documentId,
   });
   const [progressPercent, setProgressPercent] = useState(0);
 
-  const fetchData = () => {
-    axios.get(`${backendHost}/api/document/${documentId}`).then((response) => {
-      setData(response.data.document);
-    });
+  const fetchData = async () => {
+    const { data } = await axios.get(
+      `${backendHost}/api/document/${documentId}`
+    );
+    setData(data.document);
+    const { name, type, gradeLevel, url, _id } = data.document;
+    setUpdatedDocumentInfo({ name, type, gradeLevel, url, _id });
   };
 
   useEffect(() => {
@@ -60,15 +64,21 @@ const New = ({ title }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const url = backendHost + `/api/document/${data.id}`;
-      await axios.put(url, updatedDocumentInfo);
-      alert("Successfully updated!");
-      window.location.reload();
-    } catch (error) {
-      alert("Failed to update...");
-      console.log(error);
-    }
+    const { name, type, gradeLevel, url, _id } = updatedDocumentInfo;
+    const isFormFilled = name && type && gradeLevel && url && _id;
+    if (!isFormFilled) {
+      alert("You have to fill out all fields!");
+      return;
+    } else
+      try {
+        const url = backendHost + `/api/document/${data.id}`;
+        await axios.put(url, updatedDocumentInfo);
+        alert("Successfully updated!");
+        window.location.reload();
+      } catch (error) {
+        alert("Failed to update...");
+        console.log(error);
+      }
   };
 
   return (
@@ -153,29 +163,13 @@ const New = ({ title }) => {
                   defaultValue={data.type}
                 >
                   <option value="pdf">PDF</option>
-                  <option value="docx">Docx</option>
                 </select>
               </div>
 
-              <div className="formInput">
-                <label>Grade level</label>
-                <select
-                  onChange={(e) => {
-                    e.preventDefault();
-                    setUpdatedDocumentInfo((prev) => {
-                      {
-                        return { ...prev, gradeLevel: e.target.value };
-                      }
-                    });
-                  }}
-                  defaultValue={data.gradeLevel}
-                >
-                  <option value="G10">Grade 10</option>
-                  <option value="G11">Grade 11</option>
-                  <option value="G12">Grade 12</option>
-                  <option value="collegePrep">College Prep</option>
-                </select>
-              </div>
+              <Select
+                gradeLevel={data.gradeLevel}
+                setUpdatedInfo={setUpdatedDocumentInfo}
+              />
 
               <button onClick={handleSubmit}>Send</button>
             </form>

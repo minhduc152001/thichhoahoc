@@ -9,7 +9,12 @@ import axios from "axios";
 
 const New = ({ title }) => {
   const [file, setFile] = useState();
-  const [document, setDocument] = useState({ type: "pdf", gradeLevel: "G10" });
+  const [document, setDocument] = useState({
+    url: "",
+    name: "",
+    type: "pdf",
+    gradeLevel: "G10",
+  });
   const [progressPercent, setProgressPercent] = useState(0);
 
   const backendHost = process.env.REACT_APP_BE_HOST;
@@ -44,15 +49,21 @@ const New = ({ title }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const url = backendHost + `/api/document`;
-      await axios.post(url, document);
-      alert("Successfully added!");
-      window.location.reload();
-    } catch (error) {
-      alert("Failed to add...");
-      console.log(error);
-    }
+    const { name, url } = document;
+    const isFormFilled = name && url;
+    if (!isFormFilled) {
+      alert("You have to fill out all fields!");
+      return;
+    } else
+      try {
+        const url = backendHost + `/api/document`;
+        await axios.post(url, document);
+        alert("Successfully added!");
+        window.location.reload();
+      } catch (error) {
+        alert("Failed to add...");
+        console.log(error);
+      }
   };
 
   return (

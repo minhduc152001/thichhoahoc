@@ -1,5 +1,5 @@
 export const userColumns = [
-  { field: "id", headerName: "ID", width: 140 },
+  // { field: "id", headerName: "ID", width: 140 },
   {
     field: "user",
     headerName: "User",
@@ -47,7 +47,7 @@ export const userColumns = [
 ];
 
 export const courseColumns = [
-  { field: "id", headerName: "ID", width: 140 },
+  { field: "slug", headerName: "ID", width: 140 },
   {
     field: "name",
     headerName: "Course name",
@@ -87,8 +87,15 @@ export const courseColumns = [
 ];
 
 export const lessonColumns = [
-  { field: "id", headerName: "ID", width: 140 },
-  { field: "courseId", headerName: "Course ID", width: 140 },
+  // { field: "id", headerName: "ID", width: 140 },
+  {
+    field: "courseId",
+    headerName: "Course ID",
+    width: 140,
+    renderCell: (params) => {
+      return <div>{params.row.courseId.slug}</div>;
+    },
+  },
   { field: "name", headerName: "Lesson name", width: 200 },
   { field: "description", headerName: "Lesson description", width: 200 },
   { field: "text", headerName: "Lesson guide", width: 180 },
@@ -103,7 +110,7 @@ export const lessonColumns = [
 ];
 
 export const riddleColumns = [
-  { field: "id", headerName: "ID", width: 140 },
+  // { field: "id", headerName: "ID", width: 140 },
   {
     field: "name",
     headerName: "Riddle name",
@@ -122,7 +129,7 @@ export const riddleColumns = [
 ];
 
 export const documentColumns = [
-  { field: "id", headerName: "ID", width: 140 },
+  // { field: "id", headerName: "ID", width: 140 },
   { field: "name", headerName: "Title", width: 280 },
   { field: "gradeLevel", headerName: "Level", width: 120 },
   { field: "url", headerName: "Link", width: 200 },
@@ -130,7 +137,7 @@ export const documentColumns = [
 ];
 
 export const testColumns = [
-  { field: "id", headerName: "ID", width: 140 },
+  // { field: "id", headerName: "ID", width: 140 },
   { field: "name", headerName: "Test title", width: 280 },
   { field: "gradeLevel", headerName: "Level", width: 120 },
   {

@@ -18,9 +18,17 @@ const New = ({ title }) => {
   const [updatedLessonInfo, setUpdatedLessonInfo] = useState({ _id: lessonId });
   const [progressPercent, setProgressPercent] = useState(0);
 
-  const fetchData = () => {
-    axios.get(`${backendHost}/api/lesson/${lessonId}`).then((response) => {
-      setData(response.data.lesson);
+  const fetchData = async () => {
+    const { data } = await axios.get(`${backendHost}/api/lesson/${lessonId}`);
+    setData(data.lesson);
+    const { name, videoUrl, text, _id, description } = data.lesson;
+    setUpdatedLessonInfo({
+      name,
+      videoUrl,
+      text,
+      // courseId: data.lesson.courseId._id,
+      _id,
+      description,
     });
   };
 
@@ -58,15 +66,21 @@ const New = ({ title }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const url = backendHost + `/api/lesson/${data.id}`;
-      await axios.put(url, updatedLessonInfo);
-      alert("Successfully updated!");
-      window.location.reload();
-    } catch (error) {
-      alert("Failed to update...");
-      console.log(error);
-    }
+    const { name, videoUrl, text, description } = updatedLessonInfo;
+    const isFormFilled = name && videoUrl && text && description;
+    if (!isFormFilled) {
+      alert("You have to fill out all fields!");
+      return;
+    } else
+      try {
+        const url = backendHost + `/api/lesson/${data.id}`;
+        await axios.put(url, updatedLessonInfo);
+        alert("Successfully updated!");
+        window.location.reload();
+      } catch (error) {
+        alert("Invalid Course ID");
+        console.log(error);
+      }
   };
 
   return (
@@ -146,6 +160,7 @@ const New = ({ title }) => {
               <div className="formInput">
                 <label>Course ID</label>
                 <input
+                  style={{ cursor: "not-allowed" }}
                   onChange={(e) => {
                     e.preventDefault();
                     setUpdatedLessonInfo((prev) => {
@@ -155,7 +170,8 @@ const New = ({ title }) => {
                     });
                   }}
                   type="text"
-                  defaultValue={data.courseId}
+                  disabled
+                  value={data?.courseId?.slug}
                 />
               </div>
 
@@ -197,6 +213,7 @@ const New = ({ title }) => {
               <div className="formInput">
                 <label>Date created</label>
                 <input
+                  style={{ cursor: "not-allowed" }}
                   type="text"
                   defaultValue={data?.createdAt?.split("T")[0]}
                   disabled

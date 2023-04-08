@@ -15,12 +15,22 @@ const New = ({ title }) => {
 
   const [file, setFile] = useState("");
   const [data, setData] = useState([]);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    file: "",
+  });
   const [updatedUserInfo, setUpdatedUserInfo] = useState({ _id: userId });
   const [progressPercent, setProgressPercent] = useState(0);
 
   const fetchData = () => {
     axios.get(`${backendHost}/api/user/${userId}`).then((response) => {
       setData(response.data.user);
+      setFormData({
+        file: response.data.user.avatar,
+        firstName: response.data.user.firstName,
+        lastName: response.data.user.lastName,
+      });
     });
   };
 
@@ -58,15 +68,21 @@ const New = ({ title }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const url = backendHost + `/api/user/${data.id}`;
-      await axios.put(url, updatedUserInfo);
-      alert("Successfully updated!");
-      window.location.reload();
-    } catch (error) {
-      alert("Failed to update...");
-      console.log(error);
-    }
+    const { firstName, lastName } = formData;
+    const isFormFilled = firstName && lastName;
+    if (!isFormFilled) {
+      alert("You have to fill out all fields!");
+      return;
+    } else
+      try {
+        const url = backendHost + `/api/user/${data.id}`;
+        await axios.put(url, updatedUserInfo);
+        alert("Successfully updated!");
+        window.location.reload();
+      } catch (error) {
+        alert("Failed to update...");
+        console.log(error);
+      }
   };
 
   return (
@@ -124,6 +140,9 @@ const New = ({ title }) => {
                   // id={input.key}
                   onChange={(e) => {
                     e.preventDefault();
+                    setFormData((prev) => {
+                      return { ...prev, firstName: e.target.value };
+                    });
                     setUpdatedUserInfo((prev) => {
                       {
                         return { ...prev, firstName: e.target.value };
@@ -141,6 +160,9 @@ const New = ({ title }) => {
                 <input
                   onChange={(e) => {
                     e.preventDefault();
+                    setFormData((prev) => {
+                      return { ...prev, lastName: e.target.value };
+                    });
                     setUpdatedUserInfo((prev) => {
                       {
                         return { ...prev, lastName: e.target.value };
@@ -158,7 +180,6 @@ const New = ({ title }) => {
                 <select
                   name="subscription"
                   id="subscription-select"
-                  defaultValue={data.subscription}
                   onChange={(e) => {
                     e.preventDefault();
                     setUpdatedUserInfo((prev) => {
@@ -168,10 +189,38 @@ const New = ({ title }) => {
                     });
                   }}
                 >
-                  <option value="NORMAL">NORMAL</option>
-                  <option value="MONTHLY">MONTHLY</option>
-                  <option value="ANNUALLY">ANNUALLY</option>
-                  <option value="UNLIMITED">UNLIMITED</option>
+                  <option
+                    {...(data.subscription === "NORMAL" && {
+                      selected: "selected",
+                    })}
+                    value="NORMAL"
+                  >
+                    NORMAL
+                  </option>
+                  <option
+                    {...(data.subscription === "MONTHLY" && {
+                      selected: "selected",
+                    })}
+                    value="MONTHLY"
+                  >
+                    MONTHLY
+                  </option>
+                  <option
+                    {...(data.subscription === "ANNUALLY" && {
+                      selected: "selected",
+                    })}
+                    value="ANNUALLY"
+                  >
+                    ANNUALLY
+                  </option>
+                  <option
+                    {...(data.subscription === "UNLIMITED" && {
+                      selected: "selected",
+                    })}
+                    value="UNLIMITED"
+                  >
+                    UNLIMITED
+                  </option>
                 </select>
               </div>
 
