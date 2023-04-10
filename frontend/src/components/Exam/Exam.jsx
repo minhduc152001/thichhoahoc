@@ -67,10 +67,19 @@ function Exam() {
   }
 
   const calcTotalScore = () => {
+    setScore(0);
     test.questions.map((q, i) => {
       q.correctAnswer === answers[i].slice(-1) &&
         setScore((prev) => prev + q.score);
     });
+  };
+
+  const totalCorrectAnswers = () => {
+    let sum = 0;
+    test.questions.map((q, i) => {
+      q.correctAnswer === answers[i].slice(-1) && sum++;
+    });
+    return sum;
   };
 
   const handleCloseDialog = () => {
@@ -130,12 +139,21 @@ function Exam() {
     });
   };
 
+  console.log(score);
+
   return (
     <>
       <div>
         <MainTitle title={test.name} />
         <div className="main-test">
           <div className="test-questions">
+            {showAnswer && (
+              <>
+                <h4 style={{ color: "#1b6800", textAlign: "center" }}>
+                  Đúng {totalCorrectAnswers()}/{test.questions?.length} câu
+                </h4>
+              </>
+            )}
             {test?.questions?.map((q, i) => (
               <div className="question">
                 <FormControl>
