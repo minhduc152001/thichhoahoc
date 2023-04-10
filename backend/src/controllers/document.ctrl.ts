@@ -34,18 +34,29 @@ export default class CourseCtrl {
       await DocumentService.updateDocument(req.body);
       return res
         .status(200)
-        .json({ action: "updated course", status: "success" });
+        .json({ action: "updated document", status: "success" });
     } catch (error) {
       return res.status(400).json({ error });
     }
   };
+
+  static incDownloadCount = async (req: Request, res: Response) => {
+    try {
+      await DocumentService.incDownloadCount(req.params.documentId);
+      return res
+        .status(200)
+        .json({ action: "updated course", status: "success" });
+    } catch (error) {
+      return res.status(400).json({ error });
+    }
+  }
 
   static deleteDocument = async (req: Request, res: Response) => {
     try {
       await DocumentService.removeDocument(req.params.documentId);
       return res
         .status(200)
-        .json({ action: "deleted course", status: "success" });
+        .json({ action: "deleted document", status: "success" });
     } catch (error) {
       return res.status(400).json({ error });
     }

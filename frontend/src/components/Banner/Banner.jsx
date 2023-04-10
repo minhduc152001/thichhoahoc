@@ -7,7 +7,7 @@ function Banner() {
       <div id="banner">
         <img
           // src="https://mathx.vn/themes/front-end/images/sub-slider.png"
-          src="./banner.png"
+          src="/banner.png"
           alt="Banner"
         />
       </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./Document.scss";
 import MainTitle from "../MainTitle/MainTitle";
@@ -6,45 +6,32 @@ import RcmSideBar from "../RcmSideBar/RcmSideBar";
 import numberWithCommas from "../../utils/numberWithCommas";
 import { user } from "../../constants/profileUser";
 import NeedLogin from "../NeedLogin/NeedLogin";
+import axios from "axios";
 
 function Document() {
   const [searchParams, _] = useSearchParams();
+  const [docs, setDocs] = useState([]);
   let level = searchParams.get("level");
   const levelMap = {
-    "lop-10": "lớp 10",
-    "lop-11": "lớp 11",
-    "lop-12": "lớp 12",
-    "on-thi-dai-hoc": "ôn thi đại học",
+    "lop-10": ["lớp 10", "G10"],
+    "lop-11": ["lớp 11", "G11"],
+    "lop-12": ["lớp 12", "G12"],
+    "on-thi-dai-hoc": ["ôn thi đại học", "collegePrep"],
+  };
+  const pageTitle = levelMap[level][0];
+
+  const fetchData = async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_BE_HOST}/api/documents`
+    );
+    setDocs(
+      data.documents.filter((el) => el.gradeLevel === levelMap[level][1])
+    );
   };
 
-  const docs = [
-    {
-      title: "Đề ôn tập hè Hoá lớp 11 (Chương trình mới)",
-      downloadCount: 12390,
-    },
-    {
-      title:
-        "Bộ 5 đề kiểm tra cuối học kì II Sách Chân trời sáng tạo - Hoá học lớp 12",
-      downloadCount: 2190,
-    },
-    {
-      title:
-        "Bộ 15 đề kiểm tra cuối học kì II Sách Chân trời sáng tạo - Hoá học lớp 12",
-      downloadCount: 21348,
-    },
-    {
-      title:
-        "Bộ 5 đề kiểm tra cuối học kì II Sách Chân trời sáng tạo - Hoá học lớp 12",
-      downloadCount: 1008,
-    },
-    {
-      title:
-        "Bộ 5 đề kiểm tra cuối học kì II Sách Chân trời sáng tạo - Hoá học lớp 12",
-      downloadCount: 18263,
-    },
-  ];
-
-  const pageTitle = levelMap[level];
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -63,14 +50,17 @@ function Document() {
                 </tr>
               </thead>
               <tbody>
-                {docs.map((doc) => (
+                {docs?.map((doc) => (
                   <tr>
                     <th scope="row" colSpan={5}>
-                      <a href="/doc-tai-lieu/123csad" className="title-doc">
-                        {doc.title}
+                      <a
+                        href={`/doc-tai-lieu/${doc?._id}`}
+                        className="title-doc"
+                      >
+                        {doc.name}
                       </a>
                     </th>
-                    <td>{numberWithCommas(doc.downloadCount)}</td>
+                    <td>{numberWithCommas(doc.downloadedCount)}</td>
                   </tr>
                 ))}
               </tbody>

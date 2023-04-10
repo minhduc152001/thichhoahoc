@@ -30,6 +30,12 @@ export default class DocumentService {
     return await Document.findById(documentArgs._id);
   };
 
+  static incDownloadCount = async (documentId: string) => {
+    await Document.findByIdAndUpdate(documentId, {
+      $inc: { downloadedCount: 1 },
+    });
+  };
+
   static removeDocument = async (_id: string) => {
     const document = await Document.findByIdAndDelete(_id);
     return `The document ${document?._id} was deleted`;

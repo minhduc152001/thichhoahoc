@@ -3,12 +3,19 @@ import "./Payment.scss";
 import axios from "axios";
 import { user } from "../../constants/profileUser";
 import NeedLogin from "../NeedLogin/NeedLogin";
+import { toast } from "react-toastify";
 
 const priceIds = [
   "price_1MrexDKZ5Ry91xh9kQAwQzOH",
   "price_1MsHC4KZ5Ry91xh9PUYbGYOX",
   "price_1MsA2YKZ5Ry91xh9kmWKoVqn",
 ];
+
+const subscriptionsByPriceId = {
+  price_1MrexDKZ5Ry91xh9kQAwQzOH: "MONTHLY",
+  price_1MsHC4KZ5Ry91xh9PUYbGYOX: "ANNUALLY",
+  price_1MsA2YKZ5Ry91xh9kmWKoVqn: "UNLIMITED",
+};
 
 const plans = [
   {
@@ -34,9 +41,6 @@ const plans = [
 ];
 
 function Payment() {
-  // const [bgColorForSelectedPlan, setBgColorForSelectedPlan] = useState(
-  //   bgColors.blue
-  // );
   const { REACT_APP_BE_HOST } = process.env;
   const [currentPlan, setCurrentPlan] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,15 +50,32 @@ function Payment() {
   };
 
   const handleCreateCheckout = async (priceId) => {
-    setIsLoading(true);
-    const { data } = await axios.post(
-      `${REACT_APP_BE_HOST}/create-checkout-session`,
-      {
-        priceId,
-        userId: user.userId,
-      }
-    );
-    window.location.href = data.checkoutUrl;
+    const currentUserNoPlan =
+      user?.subscription === "MONTHLY"
+        ? 1
+        : user?.subscription === "ANNUALLY"
+        ? 2
+        : user?.subscription === "UNLIMITED"
+        ? 3
+        : 0;
+    if (subscriptionsByPriceId[priceId] === user?.subscription) {
+      toast.error("Gói này đang được sử dụng!");
+      return;
+    }
+    if (currentUserNoPlan > currentPlan) {
+      toast.error("Không thể đăng ký gói thấp hơn gói hiện tại!");
+      return;
+    } else {
+      setIsLoading(true);
+      const { data } = await axios.post(
+        `${REACT_APP_BE_HOST}/create-checkout-session`,
+        {
+          priceId,
+          userId: user.userId,
+        }
+      );
+      window.location.href = data.checkoutUrl;
+    }
   };
 
   return (

@@ -1,22 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./RiddleAnswer.scss";
 import MainTitle from "../MainTitle/MainTitle";
 import Chat from "../Chat/Chat";
 import { user } from "../../constants/profileUser";
 import { needLoginToast } from "../../utils/toastInfo";
+import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 function RiddleAnswer() {
   const riddleLink = window.location.href;
+  let { riddleId } = useParams();
   let userAnswers = {};
   const [userInput, setUserInput] = useState("");
+  const [riddle, setRiddle] = useState({});
 
-  const riddle = {
-    id: "1312222",
-    question:
-      "Nguyên tố nào trong bảng tuần hoàn có khối lượng riêng lớn nhất?",
-    answer: ["Osmium", "Os"],
-    image_url: "/img-riddle.png",
+  const fetchData = async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_BE_HOST}/api/riddle/${riddleId}`
+    );
+    setRiddle(data.riddle);
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const [answers, setAnswers] = useState([
     {
@@ -25,16 +33,16 @@ function RiddleAnswer() {
       lastName: "Vu Minh",
       avatar: "/default_avatar.png",
       createdAt: new Date("2023-03-10"),
-      question: "là 682 ạ đúng ko thầy",
+      question: "CO",
     },
 
     {
       id: "3455",
       firstName: "Duong",
       lastName: "Nguyen T A",
-      avatar: "/default_avatar.png",
+      avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3sVzBYcf8Ry5hrABKnNXMLZwWI1KndKkXWA&usqp=CAU",
       createdAt: new Date("2023-02-10"),
-      question: "THƯA THẦY MÃ SỐ CỦA Ổ KHOÁ TỪ TRÁI SANG PHẢI LÀ 042        ",
+      question: "cacbon dioxit",
     },
   ]);
 
@@ -61,6 +69,16 @@ function RiddleAnswer() {
         createdAt: new Date(),
         question: userInput,
       };
+
+      if (userInput === "") {
+        toast.info("Hãy nhập câu trả lời của bạn");
+        return;
+      }
+      if (riddle.correctAnswer.includes(userInput)) {
+        toast.success("Câu trả lời đúng! ✅");
+      } else {
+        toast.error("Sai rồi! ❌");
+      }
 
       setAnswers([...answers, userAnswers]);
     } else {
@@ -110,7 +128,7 @@ function RiddleAnswer() {
         </div>
 
         <div className="riddle-img">
-          <img src={riddle.image_url} alt={riddle.question.toLowerCase()} />
+          <img src={riddle.imageUrl} alt={riddle.name?.toLowerCase()} />
         </div>
 
         <div className="riddle-question">
@@ -132,7 +150,7 @@ function RiddleAnswer() {
             />
             <div
               className="riddle-answer-btn"
-              {...(!user.userId && { style: { opacity: "0.5" } })}
+              {...(!user.userId && !userInput && { style: { opacity: "0.5" } })}
               onClick={handleSubmit}
             >
               <label htmlFor="answer-riddle">Trả lời</label>

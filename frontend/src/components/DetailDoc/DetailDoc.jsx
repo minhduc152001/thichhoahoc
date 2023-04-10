@@ -1,14 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./DetailDoc.scss";
 import RcmSideBar from "../RcmSideBar/RcmSideBar";
 import MainTitle from "../MainTitle/MainTitle";
 import PDFShow from "../PDFShow/PDFShow";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 function DetailDoc() {
-  const pdfUrl =
-    "https://firebasestorage.googleapis.com/v0/b/thesis-7edb1.appspot.com/o/pdf%2Fpdf-hoa-hoc-12.pdf?alt=media&token=7f7e9913-1979-43c4-9198-a190a517867d";
-
+  let { documentId } = useParams();
   const docLink = window.location.href;
+
+  const [doc, setDoc] = useState({});
+
+  const fetchData = async () => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_BE_HOST}/api/document/${documentId}`
+    );
+    setDoc(data.document);
+  };
+
+  const incDownloadCount = async () => {
+    await axios.get(
+      `${process.env.REACT_APP_BE_HOST}/api/document/inc/${documentId}`
+    );
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="doc-container">
@@ -33,19 +52,21 @@ function DetailDoc() {
           </div>
           <div className="remind-mes">Chúc các em học tập tốt!</div>
 
-          <PDFShow pdfUrl={pdfUrl} />
+          <PDFShow pdfUrl={doc?.url} />
         </div>
       </div>
       <div className="download-area">
         <a
-          href={pdfUrl}
+          href={doc.url}
+          onClick={incDownloadCount}
           download="CHUYÊN ĐỀ ÔN THI HỌC SINH GIỎI CẤP THÀNH PHỐ 2023 SỞ HẢI PHÒNG"
         >
           <img src="/tai-tai-lieu.png" alt="Tải tài liệu" />
         </a>
 
         <a
-          href={pdfUrl}
+          href={doc.url}
+          onClick={incDownloadCount}
           download="Lời giải: CHUYÊN ĐỀ ÔN THI HỌC SINH GIỎI CẤP THÀNH PHỐ 2023 SỞ HẢI PHÒNG"
         >
           <img src="/tai-loi-giai.png" alt="Tải lời giải" />
