@@ -16,13 +16,22 @@ export default class TestHistoryService {
 
   static upsertTestHistory = async (testHistoryArgs: ITestHistory) => {
     const { userId, mockTestId, doneTime, highestScore } = testHistoryArgs;
+    const curruntTestHistory = await TestHistory.findOne({
+      userId,
+      mockTestId,
+    });
+    const getTheHighestScore = Math.max(
+      curruntTestHistory?.highestScore || -Infinity,
+      highestScore as any
+    );
+
     const testHistory = await TestHistory.findOneAndUpdate(
       {
         userId,
         mockTestId,
       },
       {
-        $set: { doneTime, highestScore },
+        $set: { doneTime, highestScore: getTheHighestScore },
         $inc: { attemptsCount: 1 },
       },
       {
