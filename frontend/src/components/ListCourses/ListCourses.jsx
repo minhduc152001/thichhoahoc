@@ -95,7 +95,7 @@ function ListCourses() {
       data.filter((el) => el.course.gradeLevel === currentGradeLevel)
     );
     setCoursesAndCompletion((prev) =>
-      prev.sort((a, b) => b.course.lessons.length - a.course.lessons.length)
+      prev.sort((a, b) => b.course.students.length - a.course.students.length)
     );
   };
 
@@ -240,7 +240,7 @@ function ListCourses() {
                   type="radio"
                   name="type"
                   id="paid"
-                  onChange={() => filterFreeOrPaidCourses(false)}
+                  onClick={() => filterFreeOrPaidCourses(false)}
                 />
                 <label class="form-check-label" for="paid">
                   Mất phí
@@ -252,7 +252,7 @@ function ListCourses() {
                   type="radio"
                   name="type"
                   id="free"
-                  onChange={() => filterFreeOrPaidCourses(true)}
+                  onClick={() => filterFreeOrPaidCourses(true)}
                 />
                 <label class="form-check-label" for="free">
                   Miễn phí
@@ -264,8 +264,8 @@ function ListCourses() {
                   type="radio"
                   name="type"
                   id="all"
-                  checked
-                  onChange={removeFreeOrPaidFilter}
+                  defaultChecked
+                  onClick={removeFreeOrPaidFilter}
                 />
                 <label class="form-check-label" for="all">
                   Tất cả

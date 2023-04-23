@@ -193,11 +193,7 @@ function LearnScreen() {
             aria-labelledby="course-qa-tab"
           >
             <div className="main-qa-content">
-              <Avatar
-                className="avatar"
-                alt="Cindy Baker"
-                src="/default_avatar.png"
-              />
+              <Avatar className="avatar" alt="Cindy Baker" src={user.avatar} />
               <TextField
                 id="filled-basic"
                 label="Viết bình luận..."
@@ -248,9 +244,10 @@ function LearnScreen() {
                       class="form-check-input"
                       type="checkbox"
                       value=""
-                      {...(isLessonCompleted(lesson?.id) && {
-                        defaultChecked: true,
-                      })}
+                      // {...(isLessonCompleted(lesson?.id) && {
+                      //   checked: true,
+                      // })}
+                      checked={isLessonCompleted(lesson?.id)}
                       id={`check-${lesson.id}`}
                     />
                     <label class="form-check-label" for={`check-${lesson.id}`}>

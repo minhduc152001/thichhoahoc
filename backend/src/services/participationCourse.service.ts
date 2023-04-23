@@ -51,13 +51,17 @@ export default class ParticipationCourseService {
   static updateParticipationCourse = async (
     participationCourseArgs: IParticipationCourse
   ) => {
-    const { newCompletedLessonId, isCompleted } = participationCourseArgs;
+    const { newCompletedLessonId, isCompleted, userId, courseId } =
+      participationCourseArgs;
+    console.log({ isCompleted });
     const recordCounts = await ParticipationCourse.countDocuments({
+      userId,
+      courseId,
       completedLessons: {
         $in: [newCompletedLessonId],
       },
     });
-    
+    console.log({ recordCounts });
     if (recordCounts === 0) {
       const filter = {
         userId: participationCourseArgs.userId,
@@ -77,7 +81,10 @@ export default class ParticipationCourseService {
       await ParticipationCourse.findOneAndUpdate(filter, update);
     }
 
-    return await ParticipationCourse.findById(participationCourseArgs._id);
+    return await ParticipationCourse.findOne({
+      userId: participationCourseArgs.userId,
+      courseId: participationCourseArgs.courseId,
+    });
   };
 
   static removeParticipationCourse = async (_id: string) => {
